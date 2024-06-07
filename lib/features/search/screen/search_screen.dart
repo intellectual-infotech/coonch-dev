@@ -1,0 +1,126 @@
+import 'package:coonch/common/widgets/image_builder.dart';
+import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/model/search_result.dart';
+import 'package:coonch/features/setting/screen/subscription_screen.dart';
+import 'package:coonch/utils/constants/colors.dart';
+import 'package:coonch/utils/constants/sizes.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+
+class SearchScreen extends StatelessWidget {
+  SearchScreen({super.key});
+
+  final SearchScreenController searchScreenController =
+      Get.find<SearchScreenController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(MSizes.defaultSpace),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Search Field
+            TextFormField(
+              controller: searchScreenController.searchProfileController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(MSizes.borderRadiusLg),
+                    ),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: MColors.textFieldBorder,
+                    ),
+                  ),
+                  prefixIcon: Icon(
+                    CupertinoIcons.search,
+                    color: MColors.buttonUnSelected,
+                  ),
+                  hintText: "Search",
+                  hintStyle: TextStyle(
+                    fontSize: MSizes.fontSizeMd,
+                    color: MColors.buttonUnSelected,
+                  )),
+            ),
+            const SizedBox(height: MSizes.spaceBtwItems),
+
+            /// Related Search
+            Expanded(
+              child: Obx(() {
+                if (!searchScreenController.isSearchStart.value) {
+                  return const SizedBox();
+                } else if (searchScreenController.searchResults.isEmpty) {
+                  return const Text('No results found');
+                }
+                return ListView.builder(
+                  itemCount: searchScreenController.searchResults.length,
+                  itemBuilder: (context, index) {
+                    SearchResultModel user =
+                        searchScreenController.searchResults[index];
+
+                    print("hello ${user.following}");
+                    print("hello ${user.username}");
+                    return ListTile(
+                      onTap: () {},
+                      leading: ImageBuilder(url: user.profilePic),
+                      title: Text(user.username),
+                      onLongPress: () {
+                        Get.to(SubscriptionScreen(creatorUserId: user.userid,));
+                      },
+                      trailing: ElevatedButton(
+                        onPressed: () {},
+                        child: user.following
+                            ? const Text("Unfollow")
+                            : const Text("Follow"),
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
+
+            /// Recent Searchs
+            // const Text(
+            //   "Recent search",
+            //   style: TextStyle(
+            //     fontSize: MSizes.fontSizeMd,
+            //     fontWeight: FontWeight.w400,
+            //     color: MColors.darkGrey,
+            //   ),
+            // ),
+
+            /// List Of Recent Searches
+            // Column(
+            //   children: [
+            //     ListTile(
+            //       title: const Text("Adriam Liyam"),
+            //       trailing: SvgPicture.asset(MIcons.iconCross),
+            //     ),
+            //     ListTile(
+            //       title: const Text("Jaydon Lipshutz"),
+            //       trailing: SvgPicture.asset(MIcons.iconCross),
+            //     ),
+            //     ListTile(
+            //       title: const Text("Cristofer Lipshutz"),
+            //       trailing: SvgPicture.asset(MIcons.iconCross),
+            //     ),
+            //     ListTile(
+            //       title: const Text("Nolan Dokidis"),
+            //       trailing: SvgPicture.asset(MIcons.iconCross),
+            //     ),
+            //     ListTile(
+            //       title: const Text("Chance Aminoff"),
+            //       trailing: SvgPicture.asset(MIcons.iconCross),
+            //     ),
+            //   ],
+            // )
+          ],
+        ),
+      ),
+    );
+  }
+}
