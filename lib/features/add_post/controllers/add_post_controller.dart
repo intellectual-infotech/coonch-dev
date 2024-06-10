@@ -18,18 +18,27 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../../../utils/local_storage/storage_utility.dart';
+import "package:coonch/utils/local_storage/storage_utility.dart";
+
+import 'package:coonch/features/setting/controllers/setting_controller.dart';
 
 class AddPostController extends GetxController {
   TextEditingController messageController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
-  UserDataModel? userDataModel =
-      UserDataModel.fromJson(MLocalStorage.getUserData());
   RxString? assetPath = "".obs;
 
   final HomeController homeController = Get.find<HomeController>();
 
   var selectedCategory = 'Entertainment'.obs;
+  late final MLocalStorage localStorage;
+  UserDataModel? userDataModel;
+
+  @override
+  void onInit() {
+    super.onInit();
+    localStorage = Get.find<MLocalStorage>();
+    userDataModel = Get.find<SettingController>().userDataModel?.value;
+  }
 
   void setCategory(String category) {
     selectedCategory.value = category;
@@ -59,7 +68,7 @@ class AddPostController extends GetxController {
         "category": selectedCategory.value,
         "uploadedBy": userDataModel?.user?.userid ?? ''
       }, headers: {
-        'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"
+        'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
       });
       print("addPost====>response::$response");
       if (response == null || response?.isEmpty) {
@@ -72,7 +81,7 @@ class AddPostController extends GetxController {
         Get.back();
         contentUploadSuccessfullyDialog(
           Get.context!,
-          title:  MTexts.strTextUploadSuccessTitle,
+          title: MTexts.strTextUploadSuccessTitle,
           subTitle: MTexts.strTextUploadSuccessSubTitle,
         );
       } else {
@@ -169,9 +178,9 @@ class AddPostController extends GetxController {
         'uploadedBy': userDataModel?.user?.userid ?? ''
       };
 
-      print("${MLocalStorage.getToken()}");
-      request.headers.addAll(
-          {'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"});
+      print("${localStorage.getToken()}");
+      request.headers
+          .addAll({'Authorization': "Bearer ${localStorage.getToken() ?? ''}"});
       final Map<String, String> mappedBody =
           body.map((k, v) => MapEntry(k.toString(), v.toString()));
       request.fields.addAll(mappedBody);
@@ -206,7 +215,7 @@ class AddPostController extends GetxController {
         Get.back();
         contentUploadSuccessfullyDialog(
           Get.context!,
-          title:  MTexts.strVideoUploadSuccessTitle,
+          title: MTexts.strVideoUploadSuccessTitle,
           subTitle: MTexts.strVideoUploadSuccessSubTitle,
         );
       } else {

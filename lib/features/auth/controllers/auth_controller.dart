@@ -85,8 +85,12 @@ class AuthController extends GetxController {
     }
     if (response['message'] == "Login successful") {
       UserDataModel userDataModel = UserDataModel.fromJson(response);
-      await MLocalStorage.setUserData(userDataModel.toJson());
-      await MLocalStorage.setToken(userDataModel.token);
+
+
+      final localStorage = Get.find<MLocalStorage>();
+
+      await localStorage.setUserData(userDataModel.toJson());
+      await localStorage.setToken(userDataModel.token);
       Get.to(DashBoardScreen());
       Get.find<ProfileController>().callGetProfile();
     } else {

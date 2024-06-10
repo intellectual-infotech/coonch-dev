@@ -59,27 +59,35 @@ class _AudioContentHomeState extends State<AudioContentHome> {
     await _audioPlayer.setAudioSource(audioSource);
 
     _audioPlayer.playerStateStream.listen((state) {
-      setState(() {
-        _isPlaying = state.playing;
-      });
+      if (context.mounted) {
+        setState(() {
+          _isPlaying = state.playing;
+        });
+      }
     });
 
     _audioPlayer.positionStream.listen((position) {
-      setState(() {
-        _playPosition = position;
-      });
+      if (context.mounted) {
+        setState(() {
+          _playPosition = position;
+        });
+      }
     });
 
     _audioPlayer.durationStream.listen((duration) {
-      setState(() {
+      if (context.mounted) {
+        setState(() {
         _audioDuration = duration ?? Duration.zero;
       });
+      }
     });
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    if (context.mounted) {
+      _audioPlayer.dispose();
+    }
     super.dispose();
   }
 

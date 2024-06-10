@@ -13,6 +13,7 @@ class VideoModel {
   String userName;
   String userCategory;
   String videoUrl;
+  String thumbnailUrl;
   int likesNo;
   int commentNo;
   String description;
@@ -22,28 +23,31 @@ class VideoModel {
     required this.userName,
     required this.userCategory,
     required this.videoUrl,
+    required this.thumbnailUrl,
     required this.likesNo,
     required this.commentNo,
     required this.description,
   });
 
   factory VideoModel.fromJson(Map<String, dynamic> json) => VideoModel(
-    profilePicUrl: json["profile_pic_url"],
-    userName: json["user_name"],
-    userCategory: json["user_category"],
-    videoUrl: json["video_url"],
-    likesNo: json["likes_no"],
-    commentNo: json["comment_no"],
+    profilePicUrl: json["profilePicUrl"],
+    userName: json["userName"],
+    userCategory: json["userCategory"],
+    videoUrl: json["videoUrl"],
+    thumbnailUrl: json["thumbnailUrl"],
+    likesNo: json["likesNo"],
+    commentNo: json["commentNo"],
     description: json["description"],
   );
 
   Map<String, dynamic> toJson() => {
-    "profile_pic_url": profilePicUrl,
-    "user_name": userName,
-    "user_category": userCategory,
-    "video_url": videoUrl,
-    "likes_no": likesNo,
-    "comment_no": commentNo,
+    "profilePicUrl": profilePicUrl,
+    "userName": userName,
+    "userCategory": userCategory,
+    "videoUrl": videoUrl,
+    "thumbnailUrl": thumbnailUrl,
+    "likesNo": likesNo,
+    "commentNo": commentNo,
     "description": description,
   };
 }

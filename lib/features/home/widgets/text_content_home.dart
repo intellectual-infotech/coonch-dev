@@ -4,8 +4,8 @@ import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
+import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/cupertino.dart';
-
 
 class TextContentHome extends StatelessWidget {
   const TextContentHome({
@@ -40,6 +40,9 @@ class TextContentHome extends StatelessWidget {
           commentNo: textModel.commentNo,
           likeNo: textModel.likesNo,
         ),
+        const SizedBox(
+          height: MSizes.spaceBtwSections,
+        )
       ],
     );
   }

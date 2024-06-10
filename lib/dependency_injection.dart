@@ -7,18 +7,24 @@ import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/search/controllers/search_controller.dart';
 import 'package:coonch/features/setting/controllers/setting_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
+import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
 
-void init() {
+Future<void> init() async {
+  final localCache = MLocalStorage();
+
+  await localCache.init();
+  Get.lazyPut<MLocalStorage>(() => localCache, fenix: true);
+
   Get.put<GetConnect>(GetConnect()); //initializing GetConnect
-  Get.put<RestAPI>(RestAPI()); //initializing REST API class
+  Get.lazyPut<RestAPI>(() =>RestAPI() , fenix: true); //initializing REST API class
   Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
   Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
   Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   Get.lazyPut<AddPostController>(() => AddPostController(), fenix: true);
   Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   Get.lazyPut<SettingController>(() => SettingController(), fenix: true);
-  Get.lazyPut<SearchScreenController>(() => SearchScreenController(), fenix: true);
+  Get.lazyPut<SearchScreenController>(() => SearchScreenController(),
+      fenix: true);
   Get.lazyPut<ExploreController>(() => ExploreController(), fenix: true);
-
 }

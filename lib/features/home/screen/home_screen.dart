@@ -131,7 +131,7 @@ class HomeScreen extends StatelessWidget {
                                     profilePicUrl: MImages.imgMyStatusProfile2,
                                     userCategory: postDataModel.category ?? '',
                                     userName: postDataModel.username ?? '',
-
+                                    thumbnailUrl: '${APIConstants.strBaseUrl}/coonch_nodejs/backend/videos/${postDataModel.thumbnailPath}',
                                     videoUrl:
                                     '${APIConstants.strBaseUrl}/coonch_nodejs/backend/videos/${postDataModel
                                         .videoPath}',

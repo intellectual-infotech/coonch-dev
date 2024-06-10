@@ -7,16 +7,28 @@ import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../setting/controllers/setting_controller.dart';
+
 class SearchScreenController extends GetxController {
   TextEditingController searchProfileController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
 
   List<SearchResultModel> searchResults = <SearchResultModel>[];
 
-  Rx<UserDataModel>? userDataModel =
-      UserDataModel.fromJson(MLocalStorage.getUserData()).obs;
-
   RxBool isSearchStart = false.obs;
+
+  late final MLocalStorage localStorage;
+
+  @override
+  void onInit() {
+    super.onInit();
+    localStorage = Get.find<MLocalStorage>();
+    searchProfileController.addListener(() {
+      if (searchProfileController.text.isNotEmpty) {
+        searchUserAPI();
+      }
+    });
+  }
 
   void cleanSearchResult() {
     searchProfileController.clear();
@@ -24,19 +36,23 @@ class SearchScreenController extends GetxController {
   }
 
   Future<void> searchUserAPI() async {
+    UserDataModel? userDataModel;
+    if(Get.isRegistered<SettingController>()){
+      userDataModel = Get.find<SettingController>().userDataModel?.value;
+    }
     searchResults.clear();
     isSearchStart.value = false;
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultSearchPath}/searchUser",
         data: {
           "searchString": searchProfileController.text,
-          "myId": userDataModel?.value.user?.userid ?? ''
+          "myId": userDataModel?.user?.userid ?? ''
         },
         headers: {
-          'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
     print("searchUserAPI=====> response:: ${response}");
-    print(userDataModel?.value.user?.userid ?? '');
+    print(userDataModel?.user?.userid ?? '');
 
     if (response == null || response?.isEmpty) {
       isSearchStart.value = true;
@@ -51,13 +67,4 @@ class SearchScreenController extends GetxController {
     update();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    searchProfileController.addListener(() {
-      if (searchProfileController.text.isNotEmpty) {
-        searchUserAPI();
-      }
-    });
-  }
 }

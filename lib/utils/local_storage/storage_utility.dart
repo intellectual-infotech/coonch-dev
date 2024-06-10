@@ -1,59 +1,52 @@
 import 'dart:convert';
 
-import 'package:coonch/features/auth/models/UserDataModel.dart';
 import 'package:get_storage/get_storage.dart';
 
 class MLocalStorage {
-  static final MLocalStorage _instance = MLocalStorage._internal();
+  final GetStorage _storage = GetStorage();
 
-  factory MLocalStorage() {
-    return _instance;
+  GetStorage get storage => _storage;
+
+  Future<void> init()  async {
+   await GetStorage.init();
   }
 
-  static GetStorage? _storage;
+   static const String tokenKey = 'token';
+   static const String userDataKey = 'userData';
 
-  MLocalStorage._internal();
-
-  init() {
-    _storage = GetStorage();
-  }
-
-  static const String tokenKey = 'token';
-  static const String userDataKey = 'userData';
-
-  static setToken(String? value) {
+   setToken(String? value) {
     saveData<String?>(tokenKey, value);
   }
 
-  static  String? getToken() {
+    String? getToken() {
     return readData<String?>(tokenKey);
   }
 
-  static setUserData(dynamic value) {
+  setUserData(dynamic value) {
     saveData(userDataKey, jsonEncode(value));
   }
 
-  static dynamic getUserData() {
+   dynamic getUserData() {
     return jsonDecode(readData(userDataKey));
   }
 
   // Generic method to save data
-  static Future<void> saveData<T>(String key, T value) async {
-    await _storage!.write(key, value);
+   Future<void> saveData<T>(String key, T value) async {
+    await storage.write(key, value);
   }
 
   // Generic method to read data
-  static T? readData<T>(String key) {
-    return _storage!.read<T>(key);
+   T? readData<T>(String key) {
+    return storage.read<T>(key);
   }
 
   // Generic method to remove data
-  static Future<void> removeData(String key) async {
-    await _storage!.remove(key);
+   Future<void> removeData(String key) async {
+    await storage.remove(key);
   }
 
   // Clear all data in storage
-  static Future<void> clearALl() async {
-    await _storage!.erase();
+   Future<void> clearALl() async {
+    await storage.erase();
   }
 }

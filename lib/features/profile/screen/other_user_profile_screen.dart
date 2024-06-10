@@ -24,6 +24,7 @@ class OtherProfileScreen extends StatelessWidget {
   // @override
   @override
   Widget build(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
     final ProfileController profileController = Get.find<ProfileController>()
       ..callGetProfile(otherUserId: otherUserId);
 
@@ -178,6 +179,7 @@ class OtherProfileScreen extends StatelessWidget {
                       profilePicUrl: MImages.imgMyStatusProfile2,
                       userCategory: 'Engineer',
                       userName: 'Ryan Calzoni',
+                      thumbnailUrl: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngfind.com%2Fmpng%2FhmTmmwT_preview-thumbnail-wallpaper-for-youtube-hd-png-download%2F&psig=AOvVaw1i3CpSQRjdGh6qngmTd_N_&ust=1717924523890000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNinzuPVy4YDFQAAAAAdAAAAABAE',
                       videoUrl:
                           'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
                       description:

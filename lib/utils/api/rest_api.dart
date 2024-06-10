@@ -11,14 +11,16 @@ class RestAPI {
   //GET request example
   Future<dynamic> getDataMethod(String url,
       {bool isShowToast = false, required Map<String, String> data}) async {
+    final localStorage = Get.find<MLocalStorage>();
+
     String fullUrl = baseURL + url;
     print('getDataMethod=====>URL::$fullUrl');
     print('getDataMethod=====>query::$data');
-    print('getDataMethod=====>Token::${MLocalStorage.getToken() ?? ''}');
+    print('getDataMethod=====>Token::${localStorage.getToken() ?? ''}');
 
     Response response = await connect.get(fullUrl,
         query: data,
-        headers: {'Authorization': 'Bearer ${MLocalStorage.getToken() ?? ''}'});
+        headers: {'Authorization': 'Bearer ${localStorage.getToken() ?? ''}'});
 
     print('getDataMethod=====>response::${response}');
 

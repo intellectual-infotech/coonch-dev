@@ -25,9 +25,17 @@ class ProfileController extends GetxController {
       TextEditingController();
   TextEditingController editProfileConfirmPasswordController =
       TextEditingController();
-  Rx<UserDataModel>? userDataModel =
-      UserDataModel.fromJson(MLocalStorage.getUserData()).obs;
+  Rx<UserDataModel>? userDataModel = UserDataModel().obs;
   Rx<User>? otherUser = User().obs;
+
+  late final MLocalStorage localStorage;
+
+  @override
+  void onInit() {
+    super.onInit();
+    localStorage = Get.find<MLocalStorage>();
+    userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
+  }
 
   setUserProfileData() {
     editProfileFirstNameController.text =
@@ -55,7 +63,7 @@ class ProfileController extends GetxController {
           "phone": editProfilePhoneController.text ?? ''
         },
         headers: {
-          'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
 
     if (response == null || response?.isEmpty) {
@@ -124,7 +132,7 @@ class ProfileController extends GetxController {
           "newpass": editProfileConfirmPasswordController.text
         },
         headers: {
-          'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
     print("changePasswordAPI=====>response::${response}");
     if (response == null || response?.isEmpty) {

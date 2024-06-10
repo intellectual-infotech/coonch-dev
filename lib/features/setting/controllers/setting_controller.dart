@@ -10,8 +10,16 @@ class SettingController extends GetxController {
   final valueOfSwitch = true.obs;
   final RestAPI restAPI = Get.find<RestAPI>();
 
-  Rx<UserDataModel>? userDataModel =
-      UserDataModel.fromJson(MLocalStorage.getUserData()).obs;
+  Rx<UserDataModel>? userDataModel = UserDataModel().obs;
+
+  late final MLocalStorage localStorage;
+
+  @override
+  void onInit() {
+    super.onInit();
+    localStorage = Get.find<MLocalStorage>();
+    userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
+  }
 
   void toggleSwitch(bool value) {
     valueOfSwitch.value = value;
@@ -28,7 +36,7 @@ class SettingController extends GetxController {
       "creatorId": creatorUserId ?? '',
       "plan_type": isGold ? 'gold' : 'silver',
     }, headers: {
-      'Authorization': "Bearer ${MLocalStorage.getToken() ?? ''}"
+      'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
     });
 
     print("subscribeCreatorAPI =====> response:: ${response}");
