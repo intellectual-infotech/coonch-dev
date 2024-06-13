@@ -1,13 +1,13 @@
 import 'package:coonch/common/widgets/image_builder.dart';
 import 'package:coonch/features/search/controllers/search_controller.dart';
 import 'package:coonch/features/search/model/search_result.dart';
+import 'package:coonch/features/search/screen/search_user_profile_screen.dart';
 import 'package:coonch/features/setting/screen/subscription_screen.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 class SearchScreen extends StatelessWidget {
   SearchScreen({super.key});
@@ -61,15 +61,17 @@ class SearchScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     SearchResultModel user =
                         searchScreenController.searchResults[index];
-
-                    print("hello ${user.following}");
-                    print("hello ${user.username}");
                     return ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(SearchUserProfileScreen(
+                            searchedUserId: user.userid));
+                      },
                       leading: ImageBuilder(url: user.profilePic),
                       title: Text(user.username),
                       onLongPress: () {
-                        Get.to(SubscriptionScreen(creatorUserId: user.userid,));
+                        Get.to(SubscriptionScreen(
+                          creatorUserId: user.userid,
+                        ));
                       },
                       trailing: ElevatedButton(
                         onPressed: () {},

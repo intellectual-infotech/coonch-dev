@@ -6,19 +6,21 @@ import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-
 class DescriptionWithChangeableHeightHome extends StatelessWidget {
-  const DescriptionWithChangeableHeightHome({
+  DescriptionWithChangeableHeightHome({
     super.key,
     this.model,
-    required this.homeController,
   });
 
-
   final dynamic model; // This can be VideoModel, AudioModel, or TextModel
-  final HomeController homeController;
+  final RxBool isShowMore = false.obs;
+
+  void toggleExpansion() {
+    isShowMore.value = !isShowMore.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() {
+            int length = description.length;
             return AnimatedCrossFade(
               firstChild: Text(
                 // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
@@ -52,7 +55,7 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
                 style: const TextStyle(),
                 softWrap: true,
               ),
-              crossFadeState: homeController.isExpanded.value
+              crossFadeState: isShowMore.value
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,
               duration: const Duration(milliseconds: 300),
@@ -60,14 +63,16 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
           }),
           const SizedBox(height: MSizes.sm),
           GestureDetector(
-            onTap: homeController.toggleExpansion,
-            child: Text(
-              homeController.isExpanded.value ? MTexts.strShowLess : MTexts.strShowMore,
-              style: const TextStyle(
-                color: MColors.darkGrey,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            onTap: toggleExpansion,
+            child: Obx(() {
+              return Text(
+                isShowMore.value ? MTexts.strShowLess : MTexts.strShowMore,
+                style: const TextStyle(
+                  color: MColors.darkGrey,
+                  fontWeight: FontWeight.w400,
+                ),
+              );
+            }),
           ),
         ],
       ),

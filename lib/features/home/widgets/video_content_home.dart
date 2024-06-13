@@ -66,7 +66,7 @@ class VideoContentHome extends StatelessWidget {
         /// Description
         DescriptionWithChangeableHeightHome(
           model: videoModel,
-          homeController: homeController,
+          // homeController: homeController,
         ),
       ],
     );

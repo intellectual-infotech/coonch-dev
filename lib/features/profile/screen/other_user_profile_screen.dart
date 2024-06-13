@@ -17,7 +17,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class OtherProfileScreen extends StatelessWidget {
-  OtherProfileScreen({super.key, this.otherUserId});
+  const OtherProfileScreen({super.key, this.otherUserId});
 
   final String? otherUserId;
 
@@ -44,7 +44,6 @@ class OtherProfileScreen extends StatelessWidget {
               () => Column(
                 children: [
                   /// Profile Photo row
-
                   Row(
                     children: [
                       Container(
@@ -146,7 +145,7 @@ class OtherProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: MSizes.spaceBtwItems),
 
-                  /// Edit Profile & Create Playlist
+                  /// Follow & Create Playlist
                   Row(
                     children: [
                       Expanded(

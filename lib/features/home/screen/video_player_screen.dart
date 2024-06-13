@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
+
   const VideoPlayerScreen({super.key, required this.videoUrl});
 
   final String videoUrl;
@@ -12,6 +13,7 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+
   late VideoPlayerController videoPlayerController;
   ChewieController? chewieController;
 
@@ -49,6 +51,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Video Player'),

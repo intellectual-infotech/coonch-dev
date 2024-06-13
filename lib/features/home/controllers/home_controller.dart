@@ -61,7 +61,5 @@ class HomeController extends GetxController {
   }
 
   // -- show more & show less
-  void toggleExpansion() {
-    isExpanded.value = !isExpanded.value;
-  }
+
 }

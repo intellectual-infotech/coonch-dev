@@ -87,17 +87,19 @@ class ProfileController extends GetxController {
 
   Future<void> callGetProfile(
       {String? otherUserId, Function()? callback}) async {
-    var response = await restAPI.getDataMethod(
-      "${APIConstants.strDefaultAuthPath}/getuserInfo",
-      data: {
-        "userid": otherUserId ?? userDataModel?.value.user?.userid ?? '',
-      },
-    );
+    var response = await restAPI.postDataMethod(
+        "${APIConstants.strDefaultAuthPath}/getuserInfo",
+        data: {
+          "userid": otherUserId ?? userDataModel?.value.user?.userid ?? '',
+        },
+        headers: {
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+        });
 
-    print("callGetProfile=====>response::${response}");
-    print("otherUserId::${otherUserId}");
-    print("userId::${userDataModel?.value.user?.userid}");
-    print("userToken::${userDataModel?.value.token}");
+    // print("callGetProfile=====>response::${response}");
+    // print("otherUserId::${otherUserId}");
+    // print("userId::${userDataModel?.value.user?.userid}");
+    // print("userToken::${userDataModel?.value.token}");
 
     if (response != null) {
       if (otherUserId == null) {

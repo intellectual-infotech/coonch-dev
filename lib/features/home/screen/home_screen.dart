@@ -19,7 +19,8 @@ import '../widgets/video_content_home.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final HomeController homeController = Get.find<HomeController>()..getAllPostData();
+  final HomeController homeController = Get.find<HomeController>()
+    ..getAllPostData();
 
   // @override
   @override
@@ -31,7 +32,6 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(MSizes.smmd),
           child: Column(
             children: [
-
               /// Story
               SizedBox(
                 height: 200, // Set the height to 200 pixels
@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     // child: SvgPicture.asset(MImages.imgMyStatusProfile)
                                     child:
-                                    Image.asset(MImages.imgMyStatusProfile),
+                                        Image.asset(MImages.imgMyStatusProfile),
                                   ),
                                 ),
                               )
@@ -93,65 +93,66 @@ class HomeScreen extends StatelessWidget {
 
               /// Further body
               Obx(
-                    () =>
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: homeController.postDataModelList.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        PostDataModel postDataModel =
+                () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: homeController.postDataModelList.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    PostDataModel postDataModel =
                         homeController.postDataModelList[index];
-                        return
-                          GestureDetector(
-                              onTap:() {
-                                Get.to(OtherProfileScreen(otherUserId:postDataModel.uploadedBy));
-                              },
-                              child:
-                              postDataModel.contentType == "audio"
-                                  ? AudioContentHome(
+                    return GestureDetector(
+                        onTap: () {
+                          Get.to(OtherProfileScreen(
+                              otherUserId: postDataModel.uploadedBy));
+                        },
+                        child: postDataModel.contentType == "audio"
+                            ? AudioContentHome(
                                 audioModel: AudioModel(
                                     profilePicUrl: MImages.imgMyStatusProfile2,
                                     userName: postDataModel.username ?? '',
                                     userCategory: postDataModel.category ?? '',
                                     audioUrl:
-                                    '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel
-                                        .audioPath}',
+                                        '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
                                     likesNo: 897,
                                     commentNo: 231,
-                                    description: postDataModel.description ??
-                                        ''),
-                                homeController: homeController,
-                              )
-                                  : postDataModel.contentType == "video"
-                                  ? VideoContentHome(
-                                homeController: homeController,
-                                videoModel: VideoModel(
-                                    commentNo: 425,
-                                    likesNo: 75,
-                                    profilePicUrl: MImages.imgMyStatusProfile2,
-                                    userCategory: postDataModel.category ?? '',
-                                    userName: postDataModel.username ?? '',
-                                    thumbnailUrl: '${APIConstants.strBaseUrl}/coonch_nodejs/backend/videos/${postDataModel.thumbnailPath}',
-                                    videoUrl:
-                                    '${APIConstants.strBaseUrl}/coonch_nodejs/backend/videos/${postDataModel
-                                        .videoPath}',
                                     description:
-                                    postDataModel.description ?? ''),
-                              )
-                                  : TextContentHome(
-                                textModel: TextModel(
-                                  profilePicUrl: MImages.imgMyStatusProfile2,
-                                  userName: postDataModel.username ?? '',
-                                  userCategory: postDataModel.category ?? '',
-                                  textDescription:
-                                  postDataModel.textContent ?? '',
-                                  likesNo: 90,
-                                  commentNo: 12,
-                                ),
+                                        postDataModel.description ?? ''),
                                 homeController: homeController,
-                              ));
-                      },
-                    ),
+                              )
+                            : postDataModel.contentType == "video"
+                                ? VideoContentHome(
+                                    homeController: homeController,
+                                    videoModel: VideoModel(
+                                        commentNo: 425,
+                                        likesNo: 75,
+                                        profilePicUrl:
+                                            MImages.imgMyStatusProfile2,
+                                        userCategory:
+                                            postDataModel.category ?? '',
+                                        userName: postDataModel.username ?? '',
+                                        thumbnailUrl:
+                                            '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
+                                        videoUrl:
+                                            '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
+                                        description:
+                                            postDataModel.description ?? ''),
+                                  )
+                                : TextContentHome(
+                                    textModel: TextModel(
+                                      profilePicUrl:
+                                          MImages.imgMyStatusProfile2,
+                                      userName: postDataModel.username ?? '',
+                                      userCategory:
+                                          postDataModel.category ?? '',
+                                      textDescription:
+                                          postDataModel.textContent ?? '',
+                                      likesNo: 90,
+                                      commentNo: 12,
+                                    ),
+                                    homeController: homeController,
+                                  ));
+                  },
+                ),
               ),
 
               /// Video

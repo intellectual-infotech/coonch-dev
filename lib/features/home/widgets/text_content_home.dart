@@ -31,7 +31,7 @@ class TextContentHome extends StatelessWidget {
 
         /// Text
         DescriptionWithChangeableHeightHome(
-          homeController: homeController,
+          // homeController: homeController,
           model: textModel,
         ),
 

@@ -91,13 +91,6 @@ class _AudioContentHomeState extends State<AudioContentHome> {
     super.dispose();
   }
 
-  void _togglePlayback() {
-    if (_isPlaying) {
-      _audioPlayer.pause();
-    } else {
-      _audioPlayer.play();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,35 +104,12 @@ class _AudioContentHomeState extends State<AudioContentHome> {
         ),
 
         /// Audio
-        // Container(
-        //   height: 50,
-        //   width: MediaQuery.of(context).size.width,
-        //   child: PolygonWaveform(
-        //     maxDuration: _audioDuration,
-        //     elapsedDuration: _playPosition,
-        //     samples: [],
-        //     activeColor: Colors.blue,
-        //     // Customize waveform color if needed
-        //     // progressColor: Colors.red, // Customize progress color if needed
-        //     // handleColor: Colors.black, // Customize handle color if needed
-        //     // onChanged: (Duration position) {
-        //     //   setState(() {
-        //     //     _playPosition = position;
-        //     //   });
-        //     //   _audioPlayer.seek(position);
-        //     // },
-        //     height: 50,
-        //     width: double.infinity,
-        //   ),
-        //
-        // ),
-        // For a regular waveform
         PolygonWaveform(
           samples: [],
           height: 50,
           width: 50,
         ),
-        Container(
+        SizedBox(
           height: 50,
           child: Row(
             children: [
@@ -178,7 +148,7 @@ class _AudioContentHomeState extends State<AudioContentHome> {
         /// Description
         DescriptionWithChangeableHeightHome(
           model: widget.audioModel,
-          homeController: widget.homeController,
+          // homeController: widget.homeController,
         ),
 
         const SizedBox(height: MSizes.sm),

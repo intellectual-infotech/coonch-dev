@@ -1,11 +1,11 @@
 //Create a file: rest_api.dart
+import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
 
 class RestAPI {
   final GetConnect connect = Get.find<GetConnect>();
-  String baseURL = 'http://109.199.105.248:7900/';
   Map headerData = {};
 
   //GET request example
@@ -13,7 +13,7 @@ class RestAPI {
       {bool isShowToast = false, required Map<String, String> data}) async {
     final localStorage = Get.find<MLocalStorage>();
 
-    String fullUrl = baseURL + url;
+    String fullUrl = APIConstants.strBaseUrlWithPort + url;
     print('getDataMethod=====>URL::$fullUrl');
     print('getDataMethod=====>query::$data');
     print('getDataMethod=====>Token::${localStorage.getToken() ?? ''}');
@@ -38,7 +38,7 @@ class RestAPI {
       {Map<String, dynamic>? data, Map<String, String>? headers}) async {
     //body data
     try {
-      String fullUrl = baseURL + url;
+      String fullUrl = APIConstants.strBaseUrlWithPort + url;
       print('postDataMethod=====>URL::$fullUrl');
       print('postDataMethod=====>data::$data');
       Response response;
