@@ -53,7 +53,10 @@ class MTexts {
   static const String strPosts = "Posts";
   static const String strFriends = "Friends";
   static const String strFollow = "+ Follow";
+  static const String strUnFollow = "Unfollow";
   static const String strPlayList = "+ Play List";
+  static const String strSubscribe = "Subscribe";
+  static const String strUnSubscribe = "Unsubscribe";
   static const String strFollowing = "Following";
   static const String strFirstName = "First Name";
   static const String strLastName = "Last Name";

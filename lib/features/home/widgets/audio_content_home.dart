@@ -18,11 +18,9 @@ class AudioContentHome extends StatefulWidget {
   const AudioContentHome({
     super.key,
     required this.audioModel,
-    required this.homeController,
   });
 
   final AudioModel audioModel;
-  final HomeController homeController;
 
   @override
   State<AudioContentHome> createState() => _AudioContentHomeState();

@@ -16,13 +16,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class SearchUserProfileScreen extends StatelessWidget {
-  SearchUserProfileScreen({super.key, required this.searchedUserId});
+  SearchUserProfileScreen({
+    super.key,
+    required this.searchedUserId,
+    required this.following,
+    required this.subscription,
+  });
 
   final String searchedUserId;
+  final bool following;
+  final String subscription;
   final RxInt currIndex = 0.obs;
+  final RxString selectedContentType = 'free'.obs;
 
   void changeTab(int index) {
     currIndex.value = index;
+  }
+
+  void changeContentType(String contentType) {
+    selectedContentType.value = contentType;
+    Get.find<SearchScreenController>().searchUserProfileAPI(
+      searchUserId: searchedUserId,
+      moneyType: contentType,
+    );
   }
 
   @override
@@ -157,15 +173,72 @@ class SearchUserProfileScreen extends StatelessWidget {
                       Expanded(
                         child: ProfileElevatedButton(
                           onPressed: () {},
-                          title: MTexts.strFollow,
+                          title:
+                              following ? MTexts.strUnFollow : MTexts.strFollow,
                         ),
                       ),
                       const SizedBox(width: MSizes.sm),
                       Expanded(
                         child: ProfileElevatedButton(
                           onPressed: () {},
-                          title: MTexts.strPlayList,
+                          title: subscription,
                           isTransparent: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: MSizes.spaceBtwItems),
+
+                  /// Paid and Free Content Selection
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => changeContentType('free'),
+                        child: Obx(
+                          () => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: selectedContentType.value == 'free'
+                                  ? MColors.buttonPrimary
+                                  : MColors.white,
+                              borderRadius:
+                                  BorderRadius.circular(MSizes.borderRadiusLg),
+                            ),
+                            child: Text(
+                              'Free',
+                              style: TextStyle(
+                                color: selectedContentType.value == 'free'
+                                    ? MColors.white
+                                    : MColors.darkGrey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => changeContentType('paid'),
+                        child: Obx(
+                          () => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: selectedContentType.value == 'paid'
+                                  ? MColors.buttonPrimary
+                                  : MColors.white,
+                              borderRadius:
+                                  BorderRadius.circular(MSizes.borderRadiusLg),
+                            ),
+                            child: Text(
+                              'Paid',
+                              style: TextStyle(
+                                color: selectedContentType.value == 'paid'
+                                    ? MColors.white
+                                    : MColors.darkGrey,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -206,145 +279,143 @@ class SearchUserProfileScreen extends StatelessWidget {
                         .toList(),
                   ),
 
-                  Obx(() {
-                    /// Showing Video
-                    if (currIndex.value == 0) {
-                      if (searchScreenController.isLoading.value) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: searchScreenController
-                            .userProfileResult.value?.videos.length,
-                        itemBuilder: (context, index) {
-                          String videoUrl = APIConstants.strVideosBaseUrl +
-                              searchScreenController.userProfileResult.value!
-                                  .videos[index].videoPath;
-                          String thumbnailUrl =
-                              APIConstants.strVideosBaseUrl +
-                              searchScreenController.userProfileResult.value!
-                                  .videos[index].thumbnailPath;
-                          String thumbnailUrl2 = "${APIConstants.strBaseUrl}coonch_nodejs/videos/${searchScreenController.userProfileResult.value!
-                              .videos[index].thumbnailPath}";
-                          print("videoUrl" + videoUrl);
-                          print("thumbnailUrl" + thumbnailUrl);
-                          return Column(
-                            children: [
-                              const SizedBox(height: MSizes.smmd),
-                              ProfileDataRow(
-                                profileUrl: MImages.imgMyStatusProfile2,
-                                username: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .videos[index]
-                                    .username,
-                                userCategory: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .videos[index]
-                                    .category,
-                              ),
+                  Obx(
+                    () {
+                      /// Showing Video
+                      if (currIndex.value == 0) {
+                        if (searchScreenController.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              searchScreenController.userProfileResult.value?.videos.length,
+                          itemBuilder: (context, index) {
+                            String videoUrl = APIConstants.strVideosBaseUrl +
+                                searchScreenController.userProfileResult.value!
+                                    .videos[index].videoPath;
+                            String thumbnailUrl =
+                                APIConstants.strVideosBaseUrl +
+                                    searchScreenController.userProfileResult
+                                        .value!.videos[index].thumbnailPath;
+                            // String thumbnailUrl2 =
+                            //     "${APIConstants.strBaseUrl}coonch_nodejs/videos/${searchScreenController.userProfileResult.value!.videos[index].thumbnailPath}";
 
-                              /// Thumbnail
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(VideoPlayerScreen(videoUrl: videoUrl));
-                                },
-                                child: SizedBox(
-                                  height: 200,
-                                  child: Image.network(
-                                    thumbnailUrl2,
-                                    fit: BoxFit.cover,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  (loadingProgress
-                                                          .expectedTotalBytes ??
-                                                      1)
-                                              : null,
-                                        ),
-                                      );
-                                    },
+                            return Column(
+                              children: [
+                                const SizedBox(height: MSizes.smmd),
+                                ProfileDataRow(
+                                  profileUrl: MImages.imgMyStatusProfile2,
+                                  // profileUrl: searchScreenController.filteredVideos[index].profilePicUrl,
+                                  username: searchScreenController
+                                      .userProfileResult.value!.videos[index].username,
+                                  userCategory: searchScreenController
+                                      .userProfileResult.value!.videos[index].category,
+                                ),
+
+                                /// Thumbnail
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                        VideoPlayerScreen(videoUrl: videoUrl));
+                                  },
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: Image.network(
+                                      thumbnailUrl,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
+                                                : null,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: MSizes.sm),
-                            ],
+                                const SizedBox(height: MSizes.sm),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
+                      /// Showing Audio
+                      else if (currIndex.value == 1) {
+                        if (searchScreenController.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
-                        },
-                      );
-                    } else if (currIndex.value == 1) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: searchScreenController
-                            .userProfileResult.value?.audios.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: MSizes.smmd),
-                              ProfileDataRow(
-                                profileUrl: MImages.imgMyStatusProfile2,
-                                username: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .audios[index]
-                                    .username,
-                                userCategory: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .audios[index]
-                                    .category,
-                              ),
-
-                              /// Thumbnail
-
-                              const SizedBox(height: MSizes.sm),
-                            ],
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: searchScreenController
+                              .userProfileResult.value!.videos.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                const SizedBox(height: MSizes.smmd),
+                                ProfileDataRow(
+                                  profileUrl: MImages.imgMyStatusProfile2,
+                                  username: searchScreenController
+                                      .userProfileResult.value!.audios[index].username,
+                                  userCategory: searchScreenController
+                                      .userProfileResult.value!.audios[index].category,
+                                ),
+                                const SizedBox(height: MSizes.sm),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        if (searchScreenController.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
-                        },
-                      );
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: searchScreenController
-                            .userProfileResult.value?.videos.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: MSizes.smmd),
-                              ProfileDataRow(
-                                profileUrl: MImages.imgMyStatusProfile2,
-                                username: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .text[index]
-                                    .username,
-                                userCategory: searchScreenController
-                                    .userProfileResult
-                                    .value!
-                                    .text[index]
-                                    .category,
-                              ),
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount:
+                              searchScreenController.userProfileResult.value!.text.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: MSizes.smmd),
+                                ProfileDataRow(
+                                  profileUrl: MImages.imgMyStatusProfile2,
+                                  username: searchScreenController
+                                      .userProfileResult.value!.text[index].username,
+                                  userCategory: searchScreenController
+                                      .userProfileResult.value!.text[index].category,
+                                ),
 
-                              /// Thumbnail
-
-                              const SizedBox(height: MSizes.sm),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  })
+                                /// Thumbnail
+                                Text(searchScreenController
+                                    .userProfileResult.value!.text[index].textContent ?? ""),
+                                const SizedBox(height: MSizes.sm),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),

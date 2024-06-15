@@ -17,6 +17,7 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
 
   final dynamic model; // This can be VideoModel, AudioModel, or TextModel
   final RxBool isShowMore = false.obs;
+  final RxBool isTextLong = false.obs;
 
   void toggleExpansion() {
     isShowMore.value = !isShowMore.value;
@@ -34,23 +35,32 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
       description = model.textDescription;
     }
 
+    // Measure the text
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final textSpan = TextSpan(text: description, style: const TextStyle());
+      final textPainter = TextPainter(
+        text: textSpan,
+        maxLines: 2,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout(maxWidth: MediaQuery.of(context).size.width - 16); // considering padding
+      isTextLong.value = textPainter.didExceedMaxLines;
+    });
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() {
-            int length = description.length;
             return AnimatedCrossFade(
               firstChild: Text(
-                // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
                 description,
                 style: const TextStyle(),
                 maxLines: 2, // Max lines initially set to 2
                 overflow: TextOverflow.ellipsis,
               ),
               secondChild: Text(
-                // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
                 description,
                 style: const TextStyle(),
                 softWrap: true,
@@ -61,19 +71,23 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
             );
           }),
-          const SizedBox(height: MSizes.sm),
-          GestureDetector(
-            onTap: toggleExpansion,
-            child: Obx(() {
-              return Text(
-                isShowMore.value ? MTexts.strShowLess : MTexts.strShowMore,
-                style: const TextStyle(
-                  color: MColors.darkGrey,
-                  fontWeight: FontWeight.w400,
+          Obx(() {
+            return isTextLong.value ? Column(
+              children: [
+                const SizedBox(height: MSizes.sm),
+                GestureDetector(
+                  onTap: toggleExpansion,
+                  child: Text(
+                    isShowMore.value ? MTexts.strShowLess : MTexts.strShowMore,
+                    style: const TextStyle(
+                      color: MColors.darkGrey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
-              );
-            }),
-          ),
+              ],
+            ) : SizedBox.shrink();
+          }),
         ],
       ),
     );

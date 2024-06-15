@@ -14,11 +14,9 @@ class VideoContentHome extends StatelessWidget {
   const VideoContentHome({
     super.key,
     required this.videoModel,
-    required this.homeController,
   });
 
   final VideoModel videoModel;
-  final HomeController homeController;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +63,7 @@ class VideoContentHome extends StatelessWidget {
 
         /// Description
         DescriptionWithChangeableHeightHome(
-          model: videoModel,
-          // homeController: homeController,
+          model: videoModel
         ),
       ],
     );

@@ -64,7 +64,10 @@ class SearchScreen extends StatelessWidget {
                     return ListTile(
                       onTap: () {
                         Get.to(SearchUserProfileScreen(
-                            searchedUserId: user.userid));
+                          searchedUserId: user.userid,
+                          following: user.following,
+                          subscription: user.subscription,
+                        ));
                       },
                       leading: ImageBuilder(url: user.profilePic),
                       title: Text(user.username),

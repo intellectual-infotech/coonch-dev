@@ -101,56 +101,51 @@ class HomeScreen extends StatelessWidget {
                     PostDataModel postDataModel =
                         homeController.postDataModelList[index];
                     return GestureDetector(
-                        onTap: () {
-                          Get.to(OtherProfileScreen(
-                              otherUserId: postDataModel.uploadedBy));
-                        },
-                        child: postDataModel.contentType == "audio"
-                            ? AudioContentHome(
-                                audioModel: AudioModel(
+                      onTap: () {
+                        Get.to(OtherProfileScreen(
+                            otherUserId: postDataModel.uploadedBy));
+                      },
+                      child: postDataModel.contentType == "audio"
+                          ? AudioContentHome(
+                              audioModel: AudioModel(
+                                  profilePicUrl: MImages.imgMyStatusProfile2,
+                                  userName: postDataModel.username ?? '',
+                                  userCategory: postDataModel.category ?? '',
+                                  audioUrl:
+                                      '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
+                                  likesNo: 897,
+                                  commentNo: 231,
+                                  description: postDataModel.description ?? ''),
+                            )
+                          : postDataModel.contentType == "video"
+                              ? VideoContentHome(
+                                  videoModel: VideoModel(
+                                      commentNo: 425,
+                                      likesNo: 75,
+                                      profilePicUrl:
+                                          MImages.imgMyStatusProfile2,
+                                      userCategory:
+                                          postDataModel.category ?? '',
+                                      userName: postDataModel.username ?? '',
+                                      thumbnailUrl:
+                                          '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
+                                      videoUrl:
+                                          '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
+                                      description:
+                                          postDataModel.description ?? ''),
+                                )
+                              : TextContentHome(
+                                  textModel: TextModel(
                                     profilePicUrl: MImages.imgMyStatusProfile2,
                                     userName: postDataModel.username ?? '',
                                     userCategory: postDataModel.category ?? '',
-                                    audioUrl:
-                                        '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
-                                    likesNo: 897,
-                                    commentNo: 231,
-                                    description:
-                                        postDataModel.description ?? ''),
-                                homeController: homeController,
-                              )
-                            : postDataModel.contentType == "video"
-                                ? VideoContentHome(
-                                    homeController: homeController,
-                                    videoModel: VideoModel(
-                                        commentNo: 425,
-                                        likesNo: 75,
-                                        profilePicUrl:
-                                            MImages.imgMyStatusProfile2,
-                                        userCategory:
-                                            postDataModel.category ?? '',
-                                        userName: postDataModel.username ?? '',
-                                        thumbnailUrl:
-                                            '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
-                                        videoUrl:
-                                            '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
-                                        description:
-                                            postDataModel.description ?? ''),
-                                  )
-                                : TextContentHome(
-                                    textModel: TextModel(
-                                      profilePicUrl:
-                                          MImages.imgMyStatusProfile2,
-                                      userName: postDataModel.username ?? '',
-                                      userCategory:
-                                          postDataModel.category ?? '',
-                                      textDescription:
-                                          postDataModel.textContent ?? '',
-                                      likesNo: 90,
-                                      commentNo: 12,
-                                    ),
-                                    homeController: homeController,
-                                  ));
+                                    textDescription:
+                                        postDataModel.textContent ?? '',
+                                    likesNo: 90,
+                                    commentNo: 12,
+                                  ),
+                                ),
+                    );
                   },
                 ),
               ),

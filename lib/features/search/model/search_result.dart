@@ -19,6 +19,7 @@ class SearchResultModel {
   String password;
   String profilePic;
   bool following;
+  String subscription;
 
   SearchResultModel({
     required this.id,
@@ -31,6 +32,7 @@ class SearchResultModel {
     required this.password,
     required this.profilePic,
     required this.following,
+    required this.subscription,
   });
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) => SearchResultModel(
@@ -44,6 +46,7 @@ class SearchResultModel {
     password: json["password"],
     profilePic: json["profile_pic"],
     following: json["following"],
+    subscription: json["subscription"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -57,5 +60,6 @@ class SearchResultModel {
     "password": password,
     "profile_pic": profilePic,
     "following": following,
+    "subscription": subscription,
   };
 }
