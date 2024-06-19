@@ -5,7 +5,9 @@ import 'package:coonch/features/home/models/postDataModel.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';
 import 'package:coonch/features/home/widgets/audio_content_home.dart';
+import 'package:coonch/features/home/widgets/choice_selection_home.dart';
 import 'package:coonch/features/home/widgets/text_content_home.dart';
+import 'package:coonch/features/home/widgets/video_content_home.dart';
 import 'package:coonch/features/profile/screen/other_user_profile_screen.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
@@ -13,14 +15,21 @@ import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../widgets/choice_selection_home.dart';
-import '../widgets/video_content_home.dart';
-
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
 
   final HomeController homeController = Get.find<HomeController>()
     ..getAllPostData();
+  final ScrollController _scrollController = ScrollController();
+
+  HomeScreen({super.key}) {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        if (homeController.hasMore && !homeController.isLoading) {
+          homeController.getAllPostData(); // Load next page
+        }
+      }
+    });
+  }
 
   // @override
   @override
@@ -28,6 +37,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: MColors.softGrey,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: const EdgeInsets.all(MSizes.smmd),
           child: Column(
@@ -93,65 +103,79 @@ class HomeScreen extends StatelessWidget {
 
               /// Further body
               Obx(
-                () => ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: homeController.postDataModelList.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    PostDataModel postDataModel =
-                        homeController.postDataModelList[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(OtherProfileScreen(
-                            otherUserId: postDataModel.uploadedBy));
-                      },
-                      child: postDataModel.contentType == "audio"
-                          ? AudioContentHome(
-                              audioModel: AudioModel(
-                                  profilePicUrl: MImages.imgMyStatusProfile2,
-                                  userName: postDataModel.username ?? '',
-                                  userCategory: postDataModel.category ?? '',
-                                  audioUrl:
-                                      '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
-                                  likesNo: 897,
-                                  commentNo: 231,
-                                  description: postDataModel.description ?? ''),
-                            )
-                          : postDataModel.contentType == "video"
-                              ? VideoContentHome(
-                                  videoModel: VideoModel(
-                                      commentNo: 425,
-                                      likesNo: 75,
-                                      profilePicUrl:
-                                          MImages.imgMyStatusProfile2,
-                                      userCategory:
-                                          postDataModel.category ?? '',
-                                      userName: postDataModel.username ?? '',
-                                      thumbnailUrl:
-                                          '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
-                                      videoUrl:
-                                          '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
-                                      description:
-                                          postDataModel.description ?? ''),
-                                )
-                              : TextContentHome(
-                                  textModel: TextModel(
-                                    profilePicUrl: MImages.imgMyStatusProfile2,
-                                    userName: postDataModel.username ?? '',
-                                    userCategory: postDataModel.category ?? '',
-                                    textDescription:
-                                        postDataModel.textContent ?? '',
-                                    likesNo: 90,
-                                    commentNo: 12,
-                                  ),
-                                ),
-                    );
-                  },
-                ),
+                () => homeController.postDataModelList.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: homeController.postDataModelList.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          if (index ==
+                              homeController.postDataModelList.length) {
+                            return homeController.hasMore
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : const Center(child: Text("No more posts"));
+                          }
+                          PostDataModel postDataModel =
+                              homeController.postDataModelList[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(OtherProfileScreen(
+                                  otherUserId: postDataModel.uploadedBy));
+                            },
+                            child: postDataModel.contentType == "audio"
+                                ? AudioContentHome(
+                                    audioModel: AudioModel(
+                                        profilePicUrl:
+                                            "${APIConstants.strProfilePicBaseUrl}${postDataModel.profilePic}",
+                                        userName: postDataModel.username ?? '',
+                                        userCategory:
+                                            postDataModel.category ?? '',
+                                        audioUrl:
+                                            '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
+                                        likesNo: 897,
+                                        commentNo: 231,
+                                        description:
+                                            postDataModel.description ?? ''),
+                                  )
+                                : postDataModel.contentType == "video"
+                                    ? VideoContentHome(
+                                        videoModel: VideoModel(
+                                            commentNo: 425,
+                                            likesNo: 75,
+                                            profilePicUrl:
+                                                "${APIConstants.strProfilePicBaseUrl}${postDataModel.profilePic}",
+                                            userCategory:
+                                                postDataModel.category ?? '',
+                                            userName:
+                                                postDataModel.username ?? '',
+                                            thumbnailUrl:
+                                                '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
+                                            videoUrl:
+                                                '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
+                                            description:
+                                                postDataModel.description ??
+                                                    ''),
+                                      )
+                                    : TextContentHome(
+                                        textModel: TextModel(
+                                          profilePicUrl:
+                                              "${APIConstants.strProfilePicBaseUrl}${postDataModel.profilePic}",
+                                          userName:
+                                              postDataModel.username ?? '',
+                                          userCategory:
+                                              postDataModel.category ?? '',
+                                          textDescription:
+                                              postDataModel.textContent ?? '',
+                                          likesNo: 90,
+                                          commentNo: 12,
+                                        ),
+                                      ),
+                          );
+                        },
+                      ),
               ),
-
-              /// Video
-
               const SizedBox(height: MSizes.spaceBtwSections),
             ],
           ),

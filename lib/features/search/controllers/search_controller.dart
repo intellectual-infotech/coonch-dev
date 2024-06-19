@@ -67,6 +67,7 @@ class SearchScreenController extends GetxController {
     searchResults.clear();
   }
 
+  /// Searching List
   Future<void> searchUserAPI() async {
     UserDataModel? userDataModel;
     if (Get.isRegistered<SettingController>()) {
@@ -107,20 +108,22 @@ class SearchScreenController extends GetxController {
     update();
   }
 
+  /// Searched User Profile
   Future<void> searchUserProfileAPI(
       {required String searchUserId,
       Function()? callback,
       String moneyType = 'free'}) async {
     isLoading.value = true;
-    var response =
-        await restAPI.postDataMethod("api/getposts/getMyPosts", data: {
-      "userId": searchUserId,
-      "page": 0,
-      "pageSize": 2,
-      "moneyType": "free" //optional
-    }, headers: {
-      'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
-    });
+    var response = await restAPI.postDataMethod("api/getposts/getMyPosts",
+        data: {
+          "userId": searchUserId,
+          "page": 0,
+          "pageSize": 2,
+          "moneyType": moneyType
+        },
+        headers: {
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+        });
 
     if (response != null) {
       // Filter and assign the content based on moneyType
@@ -155,9 +158,11 @@ class SearchScreenController extends GetxController {
         'videos': filteredVideos,
         'text': filteredTexts
       });
-      print("userProfileResult.value :: --> ${userProfileResult.value!.videos}");
+      print(
+          "userProfileResult.value :: --> ${userProfileResult.value!.videos}");
       print("userProfileResult.value :: --> ${userProfileResult.value!.text}");
-      print("userProfileResult.value :: --> ${userProfileResult.value!.audios}");
+      print(
+          "userProfileResult.value :: --> ${userProfileResult.value!.audios}");
       print(" searchUserProfileAPI response :: --> $response");
 
       if (callback != null) {
@@ -170,6 +175,4 @@ class SearchScreenController extends GetxController {
       return;
     }
   }
-
-
 }

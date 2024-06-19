@@ -18,7 +18,8 @@ import 'package:get/get.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
-  final ProfileController profileController = Get.find<ProfileController>()..callGetProfile();
+  final ProfileController profileController = Get.find<ProfileController>()
+    ..callGetProfile();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,9 @@ class ProfileScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                       ),
-                      child: Image.asset(MImages.imgMyStatusProfile2),
+                      child: Image.network(profileController
+                              .userDataModel?.value.user?.profilePic ??
+                          MImages.imgMyStatusProfile2),
                     ),
                     const SizedBox(width: MSizes.defaultSpace),
                     Expanded(
@@ -109,7 +112,6 @@ class ProfileScreen extends StatelessWidget {
                                 ?.toString() ??
                             '',
                         title: MTexts.strFollowing,
-
                       ),
                     ],
                   ),
@@ -153,7 +155,8 @@ class ProfileScreen extends StatelessWidget {
                     profilePicUrl: MImages.imgMyStatusProfile2,
                     userCategory: 'Engineer',
                     userName: 'Ryan Calzoni',
-                    thumbnailUrl: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngfind.com%2Fmpng%2FhmTmmwT_preview-thumbnail-wallpaper-for-youtube-hd-png-download%2F&psig=AOvVaw1i3CpSQRjdGh6qngmTd_N_&ust=1717924523890000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNinzuPVy4YDFQAAAAAdAAAAABAE',
+                    thumbnailUrl:
+                        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngfind.com%2Fmpng%2FhmTmmwT_preview-thumbnail-wallpaper-for-youtube-hd-png-download%2F&psig=AOvVaw1i3CpSQRjdGh6qngmTd_N_&ust=1717924523890000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNinzuPVy4YDFQAAAAAdAAAAABAE',
                     videoUrl:
                         'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
                     description:

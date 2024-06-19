@@ -15,26 +15,27 @@ class PostDataModel {
   String? title;
   String? textContent;
   String? username;
+  String? profilePic;
 
-
-  PostDataModel(
-      {this.id,
-      this.contentId,
-      this.moneyType,
-      this.category,
-      this.subCat,
-      this.description,
-      this.title,
-      this.uploadedBy,
-      this.uploadedAt,
-      this.videoPath,
-      this.thumbnailPath,
-      this.audioPath,
-      this.creatorId,
-      this.contentType,
-        this.textContent,
-        this.username
-      });
+  PostDataModel({
+    this.id,
+    this.contentId,
+    this.moneyType,
+    this.category,
+    this.subCat,
+    this.description,
+    this.title,
+    this.uploadedBy,
+    this.uploadedAt,
+    this.videoPath,
+    this.thumbnailPath,
+    this.audioPath,
+    this.creatorId,
+    this.contentType,
+    this.textContent,
+    this.username,
+    this.profilePic,
+  });
 
   PostDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -53,6 +54,7 @@ class PostDataModel {
     contentType = json['content_type'];
     textContent = json['textContent'];
     username = json['username'];
+    profilePic = json['profilePic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +82,7 @@ class PostDataModel {
     data['content_type'] = contentType;
     data['textContent'] = textContent;
     data['username'] = username;
+    data['profilePic'] = profilePic;
     return data;
   }
 }

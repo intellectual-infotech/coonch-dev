@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 
-class ProfileDataRow extends StatelessWidget {
-  const ProfileDataRow({
+class ProfileDataRowFree extends StatelessWidget {
+  const ProfileDataRowFree({
     super.key,
     required this.profileUrl,
     required this.username,
@@ -30,7 +29,14 @@ class ProfileDataRow extends StatelessWidget {
             border: Border.all(color: MColors.borderStatus, width: 2),
             color: Colors.white,
           ),
-          child: Image.asset(profileUrl),
+          // child: Image.asset(profileUrl),
+          child: Image.network(
+            profileUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(profileUrl);
+            },
+          ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,15 +50,6 @@ class ProfileDataRow extends StatelessWidget {
               style: const TextStyle(fontSize: MSizes.fontSizeSm),
             )
           ],
-        ),
-        const Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: Image.asset(
-            MIcons.iconSelectionProfileRow,
-            height: 18,
-            width: 18,
-          ),
         ),
       ],
     );

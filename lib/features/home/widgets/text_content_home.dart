@@ -1,5 +1,5 @@
 import 'package:coonch/common/widgets/like_share_row.dart';
-import 'package:coonch/common/widgets/profile_data_row.dart';
+import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
@@ -20,8 +20,8 @@ class TextContentHome extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Profile Data Row
-        ProfileDataRow(
-          profileUrl: MImages.imgMyStatusProfile2,
+        ProfileDataRowPaid(
+          profileUrl: textModel.profilePicUrl,
           username: textModel.userName,
           userCategory: textModel.userCategory,
         ),

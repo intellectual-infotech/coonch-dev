@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:coonch/common/widgets/like_share_row.dart';
-import 'package:coonch/common/widgets/profile_data_row.dart';
+import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/models/video_model.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/profile/widgets/description_with_changeable_height_profile.dart';

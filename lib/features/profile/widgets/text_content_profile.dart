@@ -1,5 +1,5 @@
 import 'package:coonch/common/widgets/like_share_row.dart';
-import 'package:coonch/common/widgets/profile_data_row.dart';
+import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';

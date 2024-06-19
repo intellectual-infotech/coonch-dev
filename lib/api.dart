@@ -6,5 +6,6 @@ class APIConstants{
   static const String strProfileImgBaseUrl = "http://109.199.105.248/coonch_nodejs/profileimg/";
   static const String strAudiosBaseUrl = "http://109.199.105.248/coonch_nodejs/audios/";
   static const String strVideosBaseUrl = "http://109.199.105.248/coonch_nodejs/videos/";
+  static const String strProfilePicBaseUrl = "http://109.199.105.248/coonch_nodejs/profileimg/";
 
 }

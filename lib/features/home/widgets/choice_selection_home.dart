@@ -25,7 +25,7 @@ class ChoiceSelectionHome extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             homeController.changeTab(currChoice['value']);
-            homeController.getAllPostData(selectedCategory: currChoice['filter']);
+            homeController.getAllPostData(selectedCategory: currChoice['filter'], isRefresh: true);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: MSizes.sm),

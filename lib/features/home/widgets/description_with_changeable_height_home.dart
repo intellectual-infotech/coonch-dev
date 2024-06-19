@@ -86,7 +86,7 @@ class DescriptionWithChangeableHeightHome extends StatelessWidget {
                   ),
                 ),
               ],
-            ) : SizedBox.shrink();
+            ) : const SizedBox.shrink();
           }),
         ],
       ),

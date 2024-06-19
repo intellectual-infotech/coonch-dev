@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-// import 'package:audioplayers/audioplayers.dart';
-import 'package:coonch/common/widgets/like_share_row.dart';
+import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
-import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
+import 'package:coonch/features/search/model/search_user_profile_result.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -13,19 +12,21 @@ import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 
-class AudioContentHome extends StatefulWidget {
-  const AudioContentHome({
+class AudioContentSearch extends StatefulWidget {
+  const AudioContentSearch({
     super.key,
     required this.audioModel,
+    required this.isFree,
   });
 
-  final AudioModel audioModel;
+  final Audio audioModel;
+  final bool isFree;
 
   @override
-  State<AudioContentHome> createState() => _AudioContentHomeState();
+  State<AudioContentSearch> createState() => _AudioContentSearchState();
 }
 
-class _AudioContentHomeState extends State<AudioContentHome> {
+class _AudioContentSearchState extends State<AudioContentSearch> {
   late AudioPlayer _audioPlayer;
   late Duration _playPosition;
   late Duration _audioDuration;
@@ -49,9 +50,9 @@ class _AudioContentHomeState extends State<AudioContentHome> {
   }
 
   Future<void> _initAudio() async {
-    print("_initAudio=======>${widget.audioModel.audioUrl}");
+    print("_initAudio=======>${widget.audioModel.audioPath}");
     AudioSource audioSource =
-        AudioSource.uri(Uri.parse(widget.audioModel.audioUrl));
+        AudioSource.uri(Uri.parse(widget.audioModel.audioPath ?? ""));
 
     await _audioPlayer.setAudioSource(audioSource);
 
@@ -93,11 +94,18 @@ class _AudioContentHomeState extends State<AudioContentHome> {
     return Column(
       children: [
         /// Profile Data Row
-        ProfileDataRowPaid(
-          profileUrl: widget.audioModel.profilePicUrl,
-          username: widget.audioModel.userName,
-          userCategory: widget.audioModel.userCategory,
-        ),
+        if (widget.isFree)
+          ProfileDataRowFree(
+            profileUrl: widget.audioModel.profilePic,
+            username: widget.audioModel.username,
+            userCategory: widget.audioModel.category,
+          )
+        else
+          ProfileDataRowPaid(
+            profileUrl: widget.audioModel.profilePic,
+            username: widget.audioModel.username,
+            userCategory: widget.audioModel.category,
+          ),
 
         /// Audio
         PolygonWaveform(
@@ -145,14 +153,7 @@ class _AudioContentHomeState extends State<AudioContentHome> {
         DescriptionWithChangeableHeightHome(
           model: widget.audioModel,
         ),
-
         const SizedBox(height: MSizes.sm),
-
-        /// Like, Share & etc.
-        LikeShareRow(
-          commentNo: widget.audioModel.commentNo,
-          likeNo: widget.audioModel.likesNo,
-        ),
       ],
     );
   }

@@ -1,11 +1,10 @@
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/features/auth/models/UserDataModel.dart';
 import 'package:coonch/features/home/models/postDataModel.dart';
+import "package:coonch/features/setting/controllers/setting_controller.dart";
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
-
-import "package:coonch/features/setting/controllers/setting_controller.dart";
 
 class HomeController extends GetxController {
   RxInt currIndex = 0.obs;
@@ -21,45 +20,79 @@ class HomeController extends GetxController {
 
   late final MLocalStorage localStorage;
 
+  // Variables for pagination
+  int currentPage = 0;
+  final int pageSize = 10;
+  bool isLoading = false;
+  bool hasMore = true;
+
   @override
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
+    getAllPostData(); // Initial load
   }
 
   void changeTab(int index) {
     currIndex.value = index;
   }
 
-  void getAllPostData({String selectedCategory = "all"}) async {
+  void getAllPostData(
+      {String selectedCategory = "all", bool isRefresh = false}) async {
+    if (isLoading) return; // Prevent multiple simultaneous requests
+
+    isLoading = true;
+    if (isRefresh) {
+      currentPage = 0;
+      hasMore = true;
+      postDataModelList.clear();
+    }
+
     UserDataModel? userDataModel;
-    if(Get.isRegistered<SettingController>()){
+    if (Get.isRegistered<SettingController>()) {
       userDataModel = Get.find<SettingController>().userDataModel?.value;
     }
     var response =
         await restAPI.postDataMethod("api/getposts/fetchallFreePosts", data: {
       "userId": userDataModel?.user?.userid ?? '',
-      "page": "0",
-      "pageSize": "1",
+      "page": currentPage.toString(),
+      "pageSize": pageSize.toString(),
       "filters": selectedCategory,
     }, headers: {
       'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
     });
     if (response == null || response?.isEmpty) {
-      showToast(title: "getAllPostData Response null or Empty");
+      showToast(title: "getAllPostData Response null or Empty123");
+      isLoading = false;
       return;
     }
     print("getAllPostData=====>res::$response");
     if (response?.isNotEmpty ?? false) {
       List? responseList = response ?? [];
-      List<PostDataModel> tempPostDataList =
-          responseList?.map((e) => PostDataModel.fromJson(e)).toList() ?? [];
-      postDataModelList.value = tempPostDataList;
+      if (responseList!.isNotEmpty) {
+        List<PostDataModel> tempPostDataList =
+            responseList.map((e) => PostDataModel.fromJson(e)).toList();
+        if (isRefresh) {
+          postDataModelList.value = tempPostDataList;
+        } else {
+          postDataModelList.addAll(tempPostDataList);
+        }
+        for (var post in tempPostDataList) {
+          print("Profile Picture URL: ${post.profilePic}");
+        }
+
+        if (tempPostDataList.length < pageSize) {
+          hasMore = false; // No more data to load
+        }
+        currentPage++;
+      } else {
+        hasMore = false;
+        showToast(title: response['error'].toString());
+      }
     } else {
       showToast(title: response['error'].toString());
     }
+    isLoading = false;
   }
-
-  // -- show more & show less
 
 }

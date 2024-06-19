@@ -9,6 +9,7 @@ import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 
 class ProfileController extends GetxController {
   RxInt currIndex = 0.obs;
@@ -27,6 +28,7 @@ class ProfileController extends GetxController {
       TextEditingController();
   Rx<UserDataModel>? userDataModel = UserDataModel().obs;
   Rx<User>? otherUser = User().obs;
+  RxBool isLoading = false.obs;
 
   late final MLocalStorage localStorage;
 
@@ -51,6 +53,7 @@ class ProfileController extends GetxController {
     editProfileConfirmPasswordController.clear();
   }
 
+  /// Edit profile
   Future<void> callUpdateProfile() async {
     showLoader();
     var response = await restAPI.postDataMethod(
@@ -85,8 +88,11 @@ class ProfileController extends GetxController {
     }
   }
 
+  /// Get Searched User Profile Info
   Future<void> callGetProfile(
       {String? otherUserId, Function()? callback}) async {
+
+    isLoading.value = true;
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/getuserInfo",
         data: {
@@ -96,31 +102,30 @@ class ProfileController extends GetxController {
           'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
 
-    // print("callGetProfile=====>response::${response}");
-    // print("otherUserId::${otherUserId}");
-    // print("userId::${userDataModel?.value.user?.userid}");
+    print("callGetProfile=====>response::${response}");
+    print("otherUserId::${otherUserId}");
+    print("userId::${userDataModel?.value.user?.userid}");
     // print("userToken::${userDataModel?.value.token}");
 
     if (response != null) {
       if (otherUserId == null) {
         userDataModel!.value.user = User.fromJson(response);
         userDataModel!.refresh();
-        if (callback != null) {
-          callback();
-        }
       } else {
+        print("otheruserId Data is Set");
         otherUser?.value = User.fromJson(response);
-        if (callback != null) {
-          callback();
-        }
+      }
+      if (callback != null) {
+        callback();
       }
     } else {
       if (response == null || response?.isEmpty) {
         print("callGetProfile response is null");
-        // showToast(title: "callGetProfile response null or empty");
+        showToast(title: "callGetProfile response is null");
         return;
       }
     }
+    isLoading.value = false;
   }
 
   Future<void> changePasswordAPI() async {
