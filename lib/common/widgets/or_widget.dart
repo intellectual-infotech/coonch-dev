@@ -1,5 +1,4 @@
 import 'package:coonch/utils/constants/colors.dart';
-import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 
 class OrWidget extends StatelessWidget {

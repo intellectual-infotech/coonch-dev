@@ -18,15 +18,20 @@ Future<void> init() async {
   Get.lazyPut<MLocalStorage>(() => localCache, fenix: true);
 
   Get.put<GetConnect>(GetConnect()); //initializing GetConnect
-  Get.lazyPut<RestAPI>(() =>RestAPI() , fenix: true); //initializing REST API class
+  Get.lazyPut<RestAPI>(
+    () => RestAPI(),
+    fenix: true,
+  ); //initializing REST API class
   Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
   Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
   Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   Get.lazyPut<AddPostController>(() => AddPostController(), fenix: true);
   Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   Get.lazyPut<SettingController>(() => SettingController(), fenix: true);
-  Get.lazyPut<SearchScreenController>(() => SearchScreenController(),
-      fenix: true);
+  Get.lazyPut<SearchScreenController>(
+    () => SearchScreenController(),
+    fenix: true,
+  );
   Get.lazyPut<ExploreController>(() => ExploreController(), fenix: true);
   Get.lazyPut<PurchaseController>(() => PurchaseController(), fenix: true);
 }

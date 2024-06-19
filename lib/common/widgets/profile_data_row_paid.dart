@@ -18,7 +18,6 @@ class ProfileDataRowPaid extends StatelessWidget {
   final String username;
   final String userCategory;
 
-  final PurchaseController purchaseController = Get.find<PurchaseController>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,43 +56,8 @@ class ProfileDataRowPaid extends StatelessWidget {
         ),
         const Spacer(),
         IconButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                Widget cancelButton = TextButton(
-                  child: Text("Cancel"),
-                  onPressed: () => Get.back(),
-                );
-                Widget continueButton = TextButton(
-                  child: Text("Continue"),
-                  onPressed: () async {
-                    // await purchaseController.purchaseContentAPI(
-                    //   creatorId,
-                    //   subscriberId,
-                    //   planType,
-                    //   contentId,
-                    //   contentType,
-                    // );
-                  },
-                );
-                return AlertDialog(
-                  title: Text("Purchase Content!"),
-                  content:
-                      Text("Are you sure you want to purchase this content."),
-                  actions: [
-                    cancelButton,
-                    continueButton,
-                  ],
-                );
-              },
-            );
-          },
-          icon: Image.asset(
-            MIcons.iconSelectionProfileRow,
-            height: 18,
-            width: 18,
-          ),
+          onPressed: (){},
+          icon: const Icon(Icons.lock_outline)
         ),
       ],
     );

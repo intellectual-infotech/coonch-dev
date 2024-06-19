@@ -42,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       child: Image.network(profileController
                               .userDataModel?.value.user?.profilePic ??
-                          MImages.imgMyStatusProfile2),
+                          ""),
                     ),
                     const SizedBox(width: MSizes.defaultSpace),
                     Expanded(

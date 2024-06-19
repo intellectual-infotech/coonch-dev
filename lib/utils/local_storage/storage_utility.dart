@@ -14,6 +14,11 @@ class MLocalStorage {
    static const String tokenKey = 'token';
    static const String userDataKey = 'userData';
 
+   removeUserData(){
+     removeData(tokenKey);
+     removeData(userDataKey);
+   }
+
    setToken(String? value) {
     saveData<String?>(tokenKey, value);
   }

@@ -34,8 +34,11 @@ class RestAPI {
   }
 
   //post request example
-  Future<dynamic> postDataMethod(String url,
-      {Map<String, dynamic>? data, Map<String, String>? headers}) async {
+  Future<dynamic> postDataMethod(
+    String url, {
+    Map<String, dynamic>? data,
+    Map<String, String>? headers,
+  }) async {
     //body data
     try {
       String fullUrl = APIConstants.strBaseUrlWithPort + url;
@@ -50,13 +53,15 @@ class RestAPI {
       }
 
       print('postDataMethod=====>response::${response.body}');
+      print('postDataMethod statusCode =====>response::${response.statusCode}');
 
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        // print(response.statusText.toString());
-        showToast(title: response.statusText.toString());
-        return null;
+        print("response.body.toString()");
+        print(response.body.toString());
+        showToast(title: response.body.toString());
+        return ;
       }
     } catch (e) {
       print("print e");

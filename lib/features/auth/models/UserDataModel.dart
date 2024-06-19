@@ -4,25 +4,18 @@
 
 class UserDataModel {
   UserDataModel({
-    this.message,
-    this.token,
     this.user,
   });
 
   UserDataModel.fromJson(dynamic json) {
-    message = json['message'];
-    token = json['token'];
+
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
-  String? message;
-  String? token;
   User? user;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['message'] = message;
-    map['token'] = token;
     if (user != null) {
       map['user'] = user?.toJson();
     }
@@ -64,8 +57,8 @@ class User {
     phone = json['phone'];
     password = json['password'];
     profilePic = json['profile_pic'];
-    followingCount = json['following_count'];
-    followersCount = json['followers_count'];
+    followingCount = json['following_count'] ?? 0;
+    followersCount = json['followers_count'] ?? 0;
   }
 
   int? id;

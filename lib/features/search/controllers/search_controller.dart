@@ -17,6 +17,8 @@ class SearchScreenController extends GetxController {
   TextEditingController searchProfileController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
 
+  // UserDataModel? userDataModel;
+
   Rx<User>? searchedUser = User().obs;
   Rx<UserDataModel>? userDataModel = UserDataModel().obs;
   List<SearchResultModel> searchResults = <SearchResultModel>[];
@@ -55,6 +57,7 @@ class SearchScreenController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
+    userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
     searchProfileController.addListener(() {
       if (searchProfileController.text.isNotEmpty) {
         searchUserAPI();

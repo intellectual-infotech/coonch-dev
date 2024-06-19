@@ -79,6 +79,7 @@ class HomeController extends GetxController {
         }
         for (var post in tempPostDataList) {
           print("Profile Picture URL: ${post.profilePic}");
+          print("Profile username : ${post.username}");
         }
 
         if (tempPostDataList.length < pageSize) {

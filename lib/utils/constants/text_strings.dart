@@ -29,6 +29,8 @@ class MTexts {
   static const String strPost = "Post";
 // static const String strLogIn = "Log in";
 
+  static const String strDummyProfileUrl = "https://www.google.com/imgres?q=image&imgurl=https%3A%2F%2Fimg-cdn.pixlr.com%2Fimage-generator%2Fhistory%2F65bb506dcb310754719cf81f%2Fede935de-1138-4f66-8ed7-44bd16efc709%2Fmedium.webp&imgrefurl=https%3A%2F%2Fpixlr.com%2Fimage-generator%2F&docid=6dhDHhJGcmvL6M&tbnid=B_ypq20yGKrazM&vet=12ahUKEwiq0bCutOeGAxVN4TgGHdnyDdMQM3oECFIQAA..i&w=500&h=500&hcb=2&ved=2ahUKEwiq0bCutOeGAxVN4TgGHdnyDdMQM3oECFIQAA";
+
   // -- Auth Validation
   static const String strPlzEnterName = "Please Enter Name";
   static const String strPlzEnterEmail = "Please Enter Email";

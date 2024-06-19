@@ -86,11 +86,10 @@ class AuthController extends GetxController {
     if (response['message'] == "Login successful") {
       UserDataModel userDataModel = UserDataModel.fromJson(response);
 
-
       final localStorage = Get.find<MLocalStorage>();
 
       await localStorage.setUserData(userDataModel.toJson());
-      await localStorage.setToken(userDataModel.token);
+      await localStorage.setToken(response["token"]);
       Get.to(DashBoardScreen());
       Get.find<ProfileController>().callGetProfile();
     } else {
@@ -173,68 +172,86 @@ class AuthController extends GetxController {
   }
 
   void onSignUp(XFile profile) async {
-    /// Validation
-    if (StringUtils.isNullOrEmpty(nameController.text)) {
-      showToast(title: MTexts.strPlzEnterName);
-      return;
-    }
-    if (phoneController.text.length != 10) {
-      showToast(title: MTexts.strPlzEnterValidPhoneNum);
-      return;
-    }
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            '${APIConstants.strBaseUrl}/${APIConstants.strDefaultAuthPath}/register'));
-    final Map<String, String> mappedBody =
-    {
-      'email': emailController.text,
-      'username': generateUsername(nameController.text, emailController.text),
-      'password': passwordController.text,
-      'display_name': nameController.text,
-      'bio': 'lorem ipsum',
-      'phone': phoneController.text.toString()
-    }.map((k, v) => MapEntry(k.toString(), v.toString()));
-    request.fields.addAll(mappedBody);
+    try {
+      /// Validation
+      if (StringUtils.isNullOrEmpty(nameController.text)) {
+        showToast(title: MTexts.strPlzEnterName);
+        return;
+      }
+      if (phoneController.text.length != 10) {
+        showToast(title: MTexts.strPlzEnterValidPhoneNum);
+        return;
+      }
+      print(
+          "Signup URL : ${APIConstants.strBaseUrlWithPort}${APIConstants.strDefaultAuthPath}/register");
 
-    Uint8List? fileBytes = await profile.readAsBytes();
-    final http.MultipartFile imgRequest = http.MultipartFile.fromBytes(
-      'profile_pic_url',
-      fileBytes.toList(),
-      filename: profile.name,
-      contentType: MediaType("photo", "jpeg, jpg, svg"),
-    );
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              '${APIConstants.strBaseUrlWithPort}${APIConstants.strDefaultAuthPath}/register'));
+      final Map<String, String> mappedBody = {
+        'email': emailController.text,
+        'username': generateUsername(nameController.text, emailController.text),
+        'password': passwordController.text,
+        'display_name': nameController.text,
+        'bio': 'lorem ipsum',
+        'phone': phoneController.text.toString()
+      }.map((k, v) => MapEntry(k.toString(), v.toString()));
+      request.fields.addAll(mappedBody);
 
-    request.files.add(imgRequest);
+      print("mappedBody : $mappedBody");
 
-    http.StreamedResponse response = await request.send();
-    http.Response response3 = await http.Response.fromStream(response);
-    print("response3 : ${response3.body}");
-    dynamic jsonResponse = jsonDecode(response3.body);
+      Uint8List? fileBytes = await profile.readAsBytes();
+      final http.MultipartFile imgRequest = http.MultipartFile.fromBytes(
+        'profile_pic_url',
+        fileBytes.toList(),
+        filename: profile.name,
+        contentType: MediaType("photo", "jpeg, jpg, svg"),
+      );
 
-    var encodeFirst = json.encode(response3.body);
-    var data = json.decode(encodeFirst);
-    print("dataa : $data");
+      request.files.add(imgRequest);
 
-    if (jsonResponse == null || jsonResponse.isEmpty) {
-      showToast(title: "onSignUp jsonResponse is null or empty");
-      return;
-    }
+      http.StreamedResponse response = await request.send();
+      http.Response response3 = await http.Response.fromStream(response);
+      print("response3 : ${response3.body}");
+      dynamic jsonResponse = jsonDecode(response3.body);
 
-    print("Sign up =======>jsonResponse::$jsonResponse");
-    if (response.statusCode == 200) {
-      if (jsonResponse.containsKey("msg")) {
-        String message = jsonResponse["msg"];
-        if (message == "Account created successfully") {
-          // Get.to(LoginScreen());
-          Get.to(HomeScreen());
-          showToast(title: message);
+      var encodeFirst = json.encode(response3.body);
+      var data = json.decode(encodeFirst);
+      print("dataa : $data");
+
+      if (jsonResponse == null || jsonResponse.isEmpty) {
+        showToast(title: "onSignUp jsonResponse is null or empty");
+        return;
+      }
+
+      print("Sign up =======>jsonResponse::$jsonResponse");
+      if (response.statusCode == 200) {
+        if (jsonResponse.containsKey("msg")) {
+          String message = jsonResponse["msg"];
+          if (message == "Account created successfully") {
+            if (jsonResponse["user"] != null) {
+              UserDataModel userDataModel =
+                  UserDataModel.fromJson(jsonResponse["user"]);
+
+              final localStorage = Get.find<MLocalStorage>();
+
+              await localStorage.setUserData(userDataModel.toJson());
+              await localStorage.setToken(jsonResponse["token"]);
+              showToast(title: message);
+              Future.delayed(const Duration(seconds: 1), () {
+                Get.to(HomeScreen());
+              });
+            }
+          }
+        } else {
+          print("No message found in the response.");
         }
       } else {
-        print("No message found in the response.");
+        print(response.reasonPhrase);
       }
-    } else {
-      print(response.reasonPhrase);
+    } catch (e) {
+      print(e);
     }
   }
 

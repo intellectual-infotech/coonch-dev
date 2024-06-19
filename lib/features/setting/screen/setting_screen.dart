@@ -183,6 +183,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 child: TextButton(
                   onPressed: () {
+                    settingController.clearUserData();
                     Get.to(LoginScreen());
                   },
                   style: TextButton.styleFrom(

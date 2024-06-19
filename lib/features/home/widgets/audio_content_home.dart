@@ -3,6 +3,7 @@ import 'dart:io';
 
 // import 'package:audioplayers/audioplayers.dart';
 import 'package:coonch/common/widgets/like_share_row.dart';
+import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
@@ -93,7 +94,7 @@ class _AudioContentHomeState extends State<AudioContentHome> {
     return Column(
       children: [
         /// Profile Data Row
-        ProfileDataRowPaid(
+        ProfileDataRowFree(
           profileUrl: widget.audioModel.profilePicUrl,
           username: widget.audioModel.userName,
           userCategory: widget.audioModel.userCategory,

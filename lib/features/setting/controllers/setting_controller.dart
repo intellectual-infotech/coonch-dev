@@ -21,6 +21,10 @@ class SettingController extends GetxController {
     userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
   }
 
+  void clearUserData(){
+    localStorage.removeUserData();
+  }
+
   void toggleSwitch(bool value) {
     valueOfSwitch.value = value;
   }

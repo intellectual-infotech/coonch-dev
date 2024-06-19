@@ -78,7 +78,7 @@ class SearchUserProfileScreen extends StatelessWidget {
                   SearchUserProfilePhotoRow(
                     profilePicUrl:
                         profileController.otherUser!.value.profilePic ??
-                            MImages.imgMyStatusProfile2,
+                            MTexts.strDummyProfileUrl,
                     userName: profileController.otherUser!.value.username ??
                         "Null Username",
                     bio: profileController.otherUser!.value.bio ?? "Null Bio",
@@ -242,6 +242,11 @@ class SearchUserProfileScreen extends StatelessWidget {
                                 .value!
                                 .videos[index]
                                 .category;
+                            String contentId = searchScreenController
+                                .userProfileResult
+                                .value!
+                                .videos[index]
+                                .contentId;
                             // String userProfilePic = searchScreenController
                             //     .filteredVideos[index].profilePicUrl;
 
@@ -263,6 +268,9 @@ class SearchUserProfileScreen extends StatelessWidget {
                                     username: username,
                                     userCategory: userCategory,
                                     videoUrl: videoUrl,
+                                    contentId: contentId,
+                                    planType: subscription,
+                                    creatorId: searchedUserId,
                                   );
                           },
                         );
@@ -379,7 +387,8 @@ class SearchUserProfileScreen extends StatelessWidget {
                                     ? ProfileDataRowFree(
                                         profileUrl: MImages.imgMyStatusProfile2,
                                         username: username,
-                                        userCategory: userCategory)
+                                        userCategory: userCategory,
+                                      )
                                     : ProfileDataRowPaid(
                                         profileUrl: MImages.imgMyStatusProfile2,
                                         username: username,

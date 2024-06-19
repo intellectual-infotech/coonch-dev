@@ -1,3 +1,4 @@
+import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/features/home/screen/video_player_screen.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
 import 'package:coonch/common/widgets/like_share_row.dart';
@@ -23,7 +24,7 @@ class VideoContentHome extends StatelessWidget {
     return Column(
       children: [
         /// Profile Data Row
-        ProfileDataRowPaid(
+        ProfileDataRowFree(
           profileUrl: videoModel.profilePicUrl,
           username: videoModel.userName,
           userCategory: videoModel.userCategory,
