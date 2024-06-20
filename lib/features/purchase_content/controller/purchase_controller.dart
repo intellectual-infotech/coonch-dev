@@ -46,13 +46,19 @@ class PurchaseController extends GetxController {
 
       if (response == null || response.isEmpty) {
         Get.back();
+        showToast(title: "Error: Response is null or empty");
         return;
+      }
+
+      if (response.containsKey('error')) {
+        showToast(title: "Error", subTitle: response['error']);
+        // return;
       } else {
-        // Handle successful response
-        showToast(title: "Content purchased successfully");
+        showToast(title: "Success", subTitle: "Content purchased successfully");
       }
     } catch (e){
       print(e);
+      showToast(title: "Error: $e");
     }
 
   }

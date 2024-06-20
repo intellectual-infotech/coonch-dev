@@ -63,10 +63,10 @@ class SearchUserProfileScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(() {
-          if (profileController.isLoading.value) {
+          if (searchScreenController.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (profileController.otherUser?.value == null) {
+          if (searchScreenController.searchedUser?.value == null) {
             return const Center(child: Text('User not found'));
           }
           return SingleChildScrollView(
@@ -90,7 +90,7 @@ class SearchUserProfileScreen extends StatelessWidget {
                       profileController: profileController),
                   const SizedBox(height: MSizes.spaceBtwItems),
 
-                  /// Follow & Create Playlist
+                  /// Follow & Subscription
                   Row(
                     children: [
                       Expanded(

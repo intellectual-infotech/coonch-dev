@@ -9,6 +9,7 @@ import 'package:coonch/features/home/widgets/choice_selection_home.dart';
 import 'package:coonch/features/home/widgets/text_content_home.dart';
 import 'package:coonch/features/home/widgets/video_content_home.dart';
 import 'package:coonch/features/profile/screen/other_user_profile_screen.dart';
+import 'package:coonch/features/search/screen/search_user_profile_screen.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
@@ -16,14 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
-
   final HomeController homeController = Get.find<HomeController>()
     ..getAllPostData();
   final ScrollController _scrollController = ScrollController();
 
   HomeScreen({super.key}) {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         if (homeController.hasMore && !homeController.isLoading) {
           homeController.getAllPostData(); // Load next page
         }
@@ -120,9 +121,21 @@ class HomeScreen extends StatelessWidget {
                           PostDataModel postDataModel =
                               homeController.postDataModelList[index];
                           return GestureDetector(
-                            onTap: () {
-                              Get.to(OtherProfileScreen(
-                                  otherUserId: postDataModel.uploadedBy));
+                            onTap: () async {
+                              String searchedUserId =
+                                  postDataModel.creatorId ?? "";
+
+                              bool isFollowing =
+                                  await homeController.checkIfFollow(
+                                      searchedUserId: searchedUserId);
+
+                              print("Is following: $isFollowing");
+
+                              Get.to(SearchUserProfileScreen(
+                                searchedUserId: searchedUserId,
+                                following: isFollowing,
+                                subscription: "subscription", /// Change
+                              ));
                             },
                             child: postDataModel.contentType == "audio"
                                 ? AudioContentHome(

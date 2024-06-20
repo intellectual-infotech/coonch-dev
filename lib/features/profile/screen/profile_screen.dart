@@ -1,12 +1,21 @@
+import 'package:coonch/api.dart';
+import 'package:coonch/common/widgets/profile_data_row_free.dart';
+import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/profile/screen/edit_profile_screen.dart';
 import 'package:coonch/features/profile/widgets/choice_selection_profile.dart';
+import 'package:coonch/features/profile/widgets/current_user_profile_statistics.dart';
 import 'package:coonch/features/profile/widgets/profile_elevated_button.dart';
 import 'package:coonch/features/profile/widgets/text_content_profile.dart';
 import 'package:coonch/features/profile/widgets/user_statistics_column.dart';
 import 'package:coonch/features/profile/widgets/video_content_profile.dart';
+import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/model/search_user_profile_result.dart';
+import 'package:coonch/features/search/widgets/audio_content_search_screen.dart';
+import 'package:coonch/features/search/widgets/search_profile_video_free.dart';
+import 'package:coonch/features/search/widgets/search_user_profile_statistics.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
@@ -21,8 +30,26 @@ class ProfileScreen extends StatelessWidget {
   final ProfileController profileController = Get.find<ProfileController>()
     ..callGetProfile();
 
+  final RxString selectedContentType = 'free'.obs;
+
+
+  void changeContentType(String contentType) {
+    selectedContentType.value = contentType;
+    Get.find<SearchScreenController>().searchUserProfileAPI(
+      searchUserId: profileController.userDataModel?.value.user?.userid ?? "",
+      moneyType: contentType,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String ownProfileId = profileController.userDataModel?.value.user?.userid ?? "";
+
+
+    final SearchScreenController searchScreenController =
+    Get.find<SearchScreenController>()
+      ..searchUserProfileAPI(searchUserId: ownProfileId);
+
     return Scaffold(
       backgroundColor: MColors.softGrey,
       body: SingleChildScrollView(
@@ -77,45 +104,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: MSizes.spaceBtwItems),
 
                 /// User Statistics row
-                IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      /// Posts
-                      const UserStatisticsColumn(
-                        count: "34235",
-                        title: MTexts.strPosts,
-                      ),
-                      const VerticalDivider(
-                        color: MColors.grey,
-                        thickness: 1,
-                        indent: 8,
-                        endIndent: 8,
-                      ),
-                      UserStatisticsColumn(
-                        count: profileController
-                                .userDataModel?.value.user?.followersCount
-                                ?.toString() ??
-                            '',
-                        title: MTexts.strFriends,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                      ),
-                      const VerticalDivider(
-                        color: MColors.grey,
-                        thickness: 1,
-                        indent: 8,
-                        endIndent: 8,
-                      ),
-                      UserStatisticsColumn(
-                        count: profileController
-                                .userDataModel?.value.user?.followingCount
-                                ?.toString() ??
-                            '',
-                        title: MTexts.strFollowing,
-                      ),
-                    ],
-                  ),
-                ),
+                CurrentUserProfileStatistics(profileController: profileController),
                 const SizedBox(height: MSizes.spaceBtwItems),
 
                 /// Edit Profile & Create Playlist
@@ -143,40 +132,265 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: MSizes.spaceBtwItems),
 
+                /// Paid and Free Content Selection
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => changeContentType('free'),
+                      child: Obx(
+                            () => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: selectedContentType.value == 'free'
+                                ? MColors.buttonPrimary
+                                : MColors.white,
+                            borderRadius:
+                            BorderRadius.circular(MSizes.borderRadiusLg),
+                          ),
+                          child: Text(
+                            'Free',
+                            style: TextStyle(
+                              color: selectedContentType.value == 'free'
+                                  ? MColors.white
+                                  : MColors.darkGrey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => changeContentType('paid'),
+                      child: Obx(
+                            () => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: selectedContentType.value == 'paid'
+                                ? MColors.buttonPrimary
+                                : MColors.white,
+                            borderRadius:
+                            BorderRadius.circular(MSizes.borderRadiusLg),
+                          ),
+                          child: Text(
+                            'Paid',
+                            style: TextStyle(
+                              color: selectedContentType.value == 'paid'
+                                  ? MColors.white
+                                  : MColors.darkGrey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: MSizes.spaceBtwItems),
+
                 /// Choice Selection
                 ChoiceSelectionProfile(profileController: profileController),
-                const SizedBox(height: MSizes.spaceBtwSections),
+                const SizedBox(height: MSizes.spaceBtwItems),
 
-                /// Video
-                VideoContentProfile(
-                  videoModel: VideoModel(
-                    commentNo: 425,
-                    likesNo: 75,
-                    profilePicUrl: MImages.imgMyStatusProfile2,
-                    userCategory: 'Engineer',
-                    userName: 'Ryan Calzoni',
-                    thumbnailUrl:
-                        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngfind.com%2Fmpng%2FhmTmmwT_preview-thumbnail-wallpaper-for-youtube-hd-png-download%2F&psig=AOvVaw1i3CpSQRjdGh6qngmTd_N_&ust=1717924523890000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNinzuPVy4YDFQAAAAAdAAAAABAE',
-                    videoUrl:
-                        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                    description:
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                  ),
-                  profileController: profileController,
-                ),
-                const SizedBox(height: MSizes.spaceBtwSections),
+                Obx(
+                      () {
+                    /// Showing Video
+                    if (profileController.currIndex.value == 0) {
+                      if (searchScreenController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (searchScreenController
+                          .userProfileResult.value?.videos.isEmpty ??
+                          true) {
+                        return const Center(
+                          child: Text('No videos uploaded'),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: searchScreenController
+                            .userProfileResult.value?.videos.length,
+                        itemBuilder: (context, index) {
+                          String videoUrl = APIConstants.strVideosBaseUrl +
+                              searchScreenController.userProfileResult.value!
+                                  .videos[index].videoPath;
+                          String thumbnailUrl =
+                              APIConstants.strVideosBaseUrl +
+                                  searchScreenController.userProfileResult
+                                      .value!.videos[index].thumbnailPath;
+                          String username = searchScreenController
+                              .userProfileResult
+                              .value!
+                              .videos[index]
+                              .username;
+                          String userCategory = searchScreenController
+                              .userProfileResult
+                              .value!
+                              .videos[index]
+                              .category;
+                          String contentId = searchScreenController
+                              .userProfileResult
+                              .value!
+                              .videos[index]
+                              .contentId;
+                          // String userProfilePic = searchScreenController
+                          //     .filteredVideos[index].profilePicUrl;
 
-                /// Text
-                TextContentProfile(
-                  textModel: TextModel(
-                    profilePicUrl: MImages.imgMyStatusProfile2,
-                    userName: 'Ahmad Curtis',
-                    userCategory: 'Engineer',
-                    textDescription: 'This is my some text description',
-                    likesNo: 90,
-                    commentNo: 12,
-                  ),
-                  profileController: profileController,
+                          return selectedContentType.value == 'free'
+                              ? SearchProfileVideoFree(
+                            // profileUrl: userProfilePic,
+                            searchScreenController:
+                            searchScreenController,
+                            videoUrl: videoUrl,
+                            thumbnailUrl: thumbnailUrl,
+                            username: username,
+                            userCategory: userCategory,
+                          )
+                              : SearchProfileVideoFree(
+                            // profileUrl: userProfilePic,
+                            searchScreenController:
+                            searchScreenController,
+                            thumbnailUrl: thumbnailUrl,
+                            username: username,
+                            userCategory: userCategory,
+                            videoUrl: videoUrl,
+                            // contentId: contentId,
+                            // planType: subscription,
+                            // creatorId: searchedUserId,
+                          );
+                        },
+                      );
+                    }
+
+                    /// Showing Audio
+                    else if (profileController.currIndex.value == 1) {
+                      if (searchScreenController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (searchScreenController
+                          .userProfileResult.value?.audios.isEmpty ??
+                          true) {
+                        return const Center(
+                          child: Text('No audios uploaded'),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: searchScreenController
+                            .userProfileResult.value!.audios.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: MSizes.smmd),
+                              AudioContentSearch(
+                                audioModel: Audio(
+                                  id: searchScreenController.userProfileResult
+                                      .value!.audios[index].id,
+                                  contentId: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .contentId,
+                                  moneyType: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .moneyType,
+                                  category: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .category,
+                                  uploadedBy: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .uploadedBy,
+                                  uploadedAt: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .uploadedAt,
+                                  username: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .username,
+                                  profilePic: searchScreenController
+                                      .userProfileResult
+                                      .value!
+                                      .audios[index]
+                                      .profilePic,
+                                ),
+                                isFree: (selectedContentType.value == 'free')
+                                    ? true
+                                    : false,
+                              ),
+                              const SizedBox(height: MSizes.sm),
+                            ],
+                          );
+                        },
+                      );
+                    }
+
+                    /// Showing Text
+                    else {
+                      if (searchScreenController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (searchScreenController
+                          .userProfileResult.value?.text.isEmpty ??
+                          true) {
+                        return const Center(
+                          child: Text('No text uploaded'),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: searchScreenController
+                            .userProfileResult.value!.text.length,
+                        itemBuilder: (context, index) {
+                          String username = searchScreenController
+                              .userProfileResult.value!.text[index].username;
+                          String userCategory = searchScreenController
+                              .userProfileResult.value!.text[index].category;
+                          String textContent = searchScreenController
+                              .userProfileResult
+                              .value!
+                              .text[index]
+                              .textContent ??
+                              "Null Text Content";
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: MSizes.smmd),
+                              selectedContentType.value == 'free'
+                                  ? ProfileDataRowFree(
+                                profileUrl: MImages.imgMyStatusProfile2,
+                                username: username,
+                                userCategory: userCategory,
+                              )
+                                  : ProfileDataRowPaid(
+                                profileUrl: MImages.imgMyStatusProfile2,
+                                username: username,
+                                userCategory: userCategory,
+                              ),
+                              Text(textContent),
+                              const SizedBox(height: MSizes.sm),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
                 ),
               ],
             ),

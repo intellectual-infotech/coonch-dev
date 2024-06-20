@@ -17,7 +17,6 @@ class SearchScreenController extends GetxController {
   TextEditingController searchProfileController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
 
-  // UserDataModel? userDataModel;
 
   Rx<User>? searchedUser = User().obs;
   Rx<UserDataModel>? userDataModel = UserDataModel().obs;

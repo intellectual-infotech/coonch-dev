@@ -8,7 +8,6 @@ class UserDataModel {
   });
 
   UserDataModel.fromJson(dynamic json) {
-
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
@@ -34,18 +33,21 @@ class UserDataModel {
 /// profile_pic : "https://example.com/profile_pic.jpg"
 
 class User {
-  User(
-      {this.id,
-      this.userid,
-      this.username,
-      this.email,
-      this.displayName,
-      this.bio,
-      this.phone,
-      this.password,
-      this.profilePic,
-      this.followersCount,
-      this.followingCount});
+  User({
+    this.id,
+    this.userid,
+    this.username,
+    this.email,
+    this.displayName,
+    this.bio,
+    this.phone,
+    this.password,
+    this.profilePic,
+    this.followersCount,
+    this.followingCount,
+    this.rewardPoints,
+    this.totalPosts,
+  });
 
   User.fromJson(dynamic json) {
     id = json['id'];
@@ -59,6 +61,8 @@ class User {
     profilePic = json['profile_pic'];
     followingCount = json['following_count'] ?? 0;
     followersCount = json['followers_count'] ?? 0;
+    rewardPoints = json['reward_points'] ?? 0;
+    totalPosts = json['total_posts'] ?? 0;
   }
 
   int? id;
@@ -72,6 +76,8 @@ class User {
   String? profilePic;
   int? followersCount;
   int? followingCount;
+  int? rewardPoints;
+  int? totalPosts;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -86,6 +92,8 @@ class User {
     map['profile_pic'] = profilePic;
     map['followers_count'] = followersCount;
     map['following_count'] = followingCount;
+    map['reward_points'] = rewardPoints;
+    map['total_posts'] = totalPosts;
     return map;
   }
 }

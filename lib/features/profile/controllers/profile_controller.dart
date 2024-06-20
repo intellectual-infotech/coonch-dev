@@ -32,6 +32,30 @@ class ProfileController extends GetxController {
 
   late final MLocalStorage localStorage;
 
+  final List<Map<String, dynamic>> choiceItem = [
+    {
+      "name": "Video",
+      "value": 0,
+    },
+    {
+      "name": "Audio",
+      "value": 1,
+    },
+    {
+      "name": "Text",
+      "value": 2,
+    }
+  ];
+
+  void changeTab(int index) {
+    currIndex.value = index;
+  }
+
+  // -- show more & show less
+  void toggleExpansion() {
+    isExpanded.value = !isExpanded.value;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -128,6 +152,10 @@ class ProfileController extends GetxController {
     isLoading.value = false;
   }
 
+  /// Get Own Profile Data
+
+
+  /// Change Password
   Future<void> changePasswordAPI() async {
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/resetpassword",
@@ -154,6 +182,7 @@ class ProfileController extends GetxController {
     }
   }
 
+  /// Change Password Validation
   bool onChangePasswordScreenValidation() {
     if (StringUtils.isNullOrEmpty(editProfileNewPasswordController.text)) {
       showToast(title: MTexts.strPlzEnterEmail);
@@ -169,33 +198,5 @@ class ProfileController extends GetxController {
       return false;
     }
     return true;
-  }
-
-  final List<Map<String, dynamic>> choiceItem = [
-    {
-      "name": "All",
-      "value": 0,
-    },
-    {
-      "name": "Video",
-      "value": 1,
-    },
-    {
-      "name": "Audio",
-      "value": 2,
-    },
-    {
-      "name": "Text",
-      "value": 3,
-    }
-  ];
-
-  void changeTab(int index) {
-    currIndex.value = index;
-  }
-
-  // -- show more & show less
-  void toggleExpansion() {
-    isExpanded.value = !isExpanded.value;
   }
 }

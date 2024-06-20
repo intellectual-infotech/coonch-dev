@@ -27,7 +27,7 @@ void purchaseContentDialog(
             planType: planType,
             creatorId: creatorId,
           );
-          // Get.back();
+          Get.back();
         },
       );
       return AlertDialog(

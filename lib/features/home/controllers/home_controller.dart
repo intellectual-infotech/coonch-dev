@@ -19,6 +19,7 @@ class HomeController extends GetxController {
   ];
 
   late final MLocalStorage localStorage;
+  Rx<UserDataModel>? currUser = UserDataModel().obs;
 
   // Variables for pagination
   int currentPage = 0;
@@ -30,11 +31,33 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
+    currUser = UserDataModel.fromJson(localStorage.getUserData()).obs;
     getAllPostData(); // Initial load
   }
 
-  void changeTab(int index) {
-    currIndex.value = index;
+  Future<bool> checkIfFollow(
+      {required String searchedUserId}) async {
+
+
+    try {
+      var response =
+          await restAPI.postDataMethod("api/follow/checkIfFollow", data: {
+        "myId": currUser?.value.user?.id ?? "",
+        "otherId": searchedUserId,
+      }, headers: {
+        'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+      });
+
+      print("checkIfFollow====>response::$response");
+      if (response == null || response?.isEmpty) {
+        showToast(title: "addTextPost response null or empty");
+        return false;
+      }
+      return response['follows'] ?? false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   void getAllPostData(
@@ -96,4 +119,7 @@ class HomeController extends GetxController {
     isLoading = false;
   }
 
+  void changeTab(int index) {
+    currIndex.value = index;
+  }
 }
