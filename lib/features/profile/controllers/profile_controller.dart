@@ -3,6 +3,7 @@ import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/common/widgets/loader_dialogue.dart';
 import 'package:coonch/features/auth/models/UserDataModel.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
@@ -31,6 +32,8 @@ class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   late final MLocalStorage localStorage;
+  final SearchScreenController searchController = Get.find<SearchScreenController>();
+
 
   final List<Map<String, dynamic>> choiceItem = [
     {
@@ -61,6 +64,7 @@ class ProfileController extends GetxController {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
     userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
+    // fetchLoggedInUserProfile();
   }
 
   setUserProfileData() {
@@ -75,6 +79,10 @@ class ProfileController extends GetxController {
   clearPassword() {
     editProfileNewPasswordController.clear();
     editProfileConfirmPasswordController.clear();
+  }
+
+  void fetchLoggedInUserProfile() async {
+    await searchController.fetchLoggedInUserProfile();
   }
 
   /// Edit profile

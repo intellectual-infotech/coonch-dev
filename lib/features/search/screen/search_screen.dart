@@ -1,5 +1,5 @@
 import 'package:coonch/common/widgets/image_builder.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/search/model/search_result.dart';
 import 'package:coonch/features/search/screen/search_user_profile_screen.dart';
 import 'package:coonch/features/setting/screen/subscription_screen.dart';

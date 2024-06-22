@@ -51,14 +51,16 @@ class PurchaseController extends GetxController {
       }
 
       if (response.containsKey('error')) {
-        showToast(title: "Error", subTitle: response['error']);
-        // return;
+        showToast(title: "Something Went Wrong!", subTitle: response['error']);
+        return;
       } else {
         showToast(title: "Success", subTitle: "Content purchased successfully");
+        return;
       }
     } catch (e){
       print(e);
       showToast(title: "Error: $e");
+      return;
     }
 
   }

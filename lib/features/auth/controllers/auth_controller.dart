@@ -233,14 +233,13 @@ class AuthController extends GetxController {
             if (jsonResponse["user"] != null) {
               UserDataModel userDataModel =
                   UserDataModel.fromJson(jsonResponse["user"]);
-
+              print("userDataModel on SignUp ===> {$userDataModel}");
               final localStorage = Get.find<MLocalStorage>();
-
-              await localStorage.setUserData(userDataModel.toJson());
               await localStorage.setToken(jsonResponse["token"]);
+              await localStorage.setUserData(userDataModel.toJson());
               showToast(title: message);
               Future.delayed(const Duration(seconds: 1), () {
-                Get.to(HomeScreen());
+                Get.offAll(HomeScreen());
               });
             }
           }

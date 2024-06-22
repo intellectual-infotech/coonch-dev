@@ -19,7 +19,7 @@ class SearchScreenController extends GetxController {
 
 
   Rx<User>? searchedUser = User().obs;
-  Rx<UserDataModel>? userDataModel = UserDataModel().obs;
+  Rx<UserDataModel>? loggedInUser = UserDataModel().obs;
   List<SearchResultModel> searchResults = <SearchResultModel>[];
   var userProfileResult = Rxn<SearchUserProfileResult>();
   RxBool isLoading = true.obs;
@@ -56,7 +56,7 @@ class SearchScreenController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
-    userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
+    loggedInUser = UserDataModel.fromJson(localStorage.getUserData()).obs;
     searchProfileController.addListener(() {
       if (searchProfileController.text.isNotEmpty) {
         searchUserAPI();
@@ -176,5 +176,9 @@ class SearchScreenController extends GetxController {
       isLoading.value = false;
       return;
     }
+  }
+
+  Future<void> fetchLoggedInUserProfile() async {
+    await searchUserProfileAPI(searchUserId: loggedInUser?.value.user?.userid ?? "");
   }
 }

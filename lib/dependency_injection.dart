@@ -5,7 +5,7 @@ import 'package:coonch/features/explore/controllers/explore_controller.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/purchase_content/controller/purchase_controller.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/setting/controllers/setting_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';

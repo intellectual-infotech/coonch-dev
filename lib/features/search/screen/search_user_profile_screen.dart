@@ -3,7 +3,7 @@ import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/profile/widgets/profile_elevated_button.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/search/model/search_user_profile_result.dart';
 import 'package:coonch/features/search/widgets/audio_content_search_screen.dart';
 import 'package:coonch/features/search/widgets/search_profile_video_free.dart';
@@ -202,6 +202,7 @@ class SearchUserProfileScreen extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
+                  const SizedBox(height: MSizes.spaceBtwItems),
 
                   Obx(
                     () {

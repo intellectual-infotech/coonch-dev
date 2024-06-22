@@ -1,14 +1,14 @@
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/purchase_content/controller/purchase_controller.dart';
 import 'package:coonch/features/purchase_content/widgets/purchase_content_dialog.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchProfileVideoPaid extends StatelessWidget {
-  SearchProfileVideoPaid({
+  const SearchProfileVideoPaid({
     super.key,
     required this.searchScreenController,
     required this.videoUrl,

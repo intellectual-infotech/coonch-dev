@@ -1,6 +1,6 @@
 import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/features/home/screen/video_player_screen.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';

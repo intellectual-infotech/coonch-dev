@@ -1,7 +1,7 @@
 import 'package:coonch/features/explore/screen/explore_screen.dart';
 import 'package:coonch/features/home/screen/home_screen.dart';
 import 'package:coonch/features/profile/screen/profile_screen.dart';
-import 'package:coonch/features/search/controllers/search_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/search/screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
