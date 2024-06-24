@@ -26,7 +26,7 @@ typedef HideTooltip = Future<void> Function({bool immediately});
 /// {@macro just_the_tooltip.overlay.constructor}
 class JustTheTooltip extends StatefulWidget implements JustTheInterface {
   const JustTheTooltip({
-    Key? key,
+    super.key,
     required this.content,
     required this.child,
     this.onDismiss,
@@ -63,7 +63,7 @@ class JustTheTooltip extends StatefulWidget implements JustTheInterface {
     this.shadow,
     this.showWhenUnlinked = false,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   @override
   final JustTheController? controller;
@@ -597,7 +597,9 @@ abstract class JustTheTooltipState<T> extends State<JustTheInterface>
       if (triggerMode == TooltipTriggerMode.longPress && mounted) {
         Feedback.forLongPress(context);
       } else {
-        Feedback.forTap(context);
+        if(mounted) {
+          Feedback.forTap(context);
+        }
       }
     }
   }

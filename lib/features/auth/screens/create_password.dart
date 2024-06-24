@@ -1,24 +1,22 @@
+import 'package:coonch/common/widgets/common_elevated_button.dart';
 import 'package:coonch/common/widgets/common_text_field.dart';
 import 'package:coonch/features/auth/controllers/auth_controller.dart';
 import 'package:coonch/features/auth/widgets/auth_heading.dart';
+import 'package:coonch/features/auth/widgets/term_and_policy.dart';
 import 'package:coonch/utils/constants/colors.dart';
+import 'package:coonch/utils/constants/sizes.dart';
+import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
-import '../../../common/widgets/common_elevated_button.dart';
-import '../../../utils/constants/sizes.dart';
-import '../../../utils/constants/text_strings.dart';
-import '../widgets/term_and_policy.dart';
 
 class CreatePasswordScreen extends StatelessWidget {
   CreatePasswordScreen({super.key});
 
   final AuthController authController = Get.find<AuthController>();
-  RxBool isPasswordVisible = false.obs;
-  RxBool isConfirmPasswordVisible = false.obs;
+  final RxBool isPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
 
   @override
   Widget build(BuildContext context) {

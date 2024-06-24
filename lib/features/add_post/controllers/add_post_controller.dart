@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/common/widgets/loader_dialogue.dart';
 import 'package:coonch/features/add_post/widgets/content_upload_success_dialog.dart';
-import 'package:coonch/features/auth/models/UserDataModel.dart';
+import 'package:coonch/features/auth/models/user_data_model.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
+import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:file_picker/file_picker.dart';
@@ -26,18 +27,20 @@ class AddPostController extends GetxController {
   TextEditingController messageController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
   RxString? assetPath = "".obs;
+  UserModel? userDataModel;
 
   final HomeController homeController = Get.find<HomeController>();
+  // final SearchScreenController searchScreenController =
 
   var selectedCategory = 'Entertainment'.obs;
   late final MLocalStorage localStorage;
-  UserDataModel? userDataModel;
 
   @override
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
     userDataModel = Get.find<SettingController>().userDataModel?.value;
+
   }
 
   void setCategory(String category) {
@@ -55,7 +58,7 @@ class AddPostController extends GetxController {
 
   void setOrderType(String type) {
     moneyType = type;
-    print("The order type is " + moneyType);
+    debugPrint("The order type is $moneyType");
     update();
   }
 
@@ -66,11 +69,11 @@ class AddPostController extends GetxController {
         "textContent": messageController.text,
         "moneyType": moneyType,
         "category": selectedCategory.value,
-        "uploadedBy": userDataModel?.user?.userid ?? ''
+        "uploadedBy": userDataModel?.userid ?? ''
       }, headers: {
         'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
       });
-      print("addPost====>response::$response");
+      debugPrint("addPost====>response::$response");
       if (response == null || response?.isEmpty) {
         showToast(title: "addTextPost response null or empty");
         return;
@@ -78,6 +81,9 @@ class AddPostController extends GetxController {
       if (response['message'] == "Data inserted successfully") {
         homeController.getAllPostData();
         clearController();
+
+        Get.find<SearchScreenController>()
+            .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
         Get.back();
         contentUploadSuccessfullyDialog(
           Get.context!,
@@ -93,7 +99,7 @@ class AddPostController extends GetxController {
   }
 
   Future<void> addAudioAssetPost() async {
-    print("addAudioAssetPost=====>call");
+    debugPrint("addAudioAssetPost=====>call");
     var request = http.MultipartRequest(
         'POST',
         Uri.parse(
@@ -101,17 +107,19 @@ class AddPostController extends GetxController {
     request.fields.addAll({
       'moneyType': moneyType,
       'category': selectedCategory.value,
-      'uploadedBy': userDataModel?.user?.userid ?? ''
+      'uploadedBy': userDataModel?.userid ?? ''
     });
     request.files.add(await http.MultipartFile.fromPath(
         'audioContent', assetPath?.value ?? ''));
 
     http.StreamedResponse response = await request.send();
     dynamic responseDecoded = jsonDecode(await response.stream.bytesToString());
-    print("addAudioAssetPost=====>response::${responseDecoded}");
+    debugPrint("addAudioAssetPost=====>response::$responseDecoded");
     if (response.statusCode == 200) {
       homeController.getAllPostData();
       clearController();
+      Get.find<SearchScreenController>()
+          .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
       Get.back();
       contentUploadSuccessfullyDialog(
         Get.context!,
@@ -126,10 +134,10 @@ class AddPostController extends GetxController {
   XFile? tempPath;
 
   getVideoFromGallery() async {
-    print("getVideoFromGallery=====>call");
+    debugPrint("getVideoFromGallery=====>call");
     final ImagePicker picker = ImagePicker();
     tempPath = await picker.pickVideo(source: ImageSource.gallery);
-    print("getVideoFromGallery=====>call tempPath::${tempPath?.path}");
+    debugPrint("getVideoFromGallery=====>call tempPath::${tempPath?.path}");
     assetPath!.value = (tempPath?.path ?? '');
   }
 
@@ -156,9 +164,11 @@ class AddPostController extends GetxController {
   }
 
   String getFileName() {
-    File file = File(assetPath!.value ?? "");
+    File file = File(assetPath!.value);
     return basename(file.path);
   }
+
+
 
   Future<void> addVideoAssetPost() async {
 // Create an HttpClient using the SecurityContext
@@ -175,16 +185,16 @@ class AddPostController extends GetxController {
         'description': 'video',
         'category': selectedCategory.value,
         'sub_cat': 'all subjects',
-        'uploadedBy': userDataModel?.user?.userid ?? ''
+        'uploadedBy': userDataModel?.userid ?? ''
       };
 
-      print("${localStorage.getToken()}");
+      debugPrint("${localStorage.getToken()}");
       request.headers
           .addAll({'Authorization': "Bearer ${localStorage.getToken() ?? ''}"});
       final Map<String, String> mappedBody =
           body.map((k, v) => MapEntry(k.toString(), v.toString()));
       request.fields.addAll(mappedBody);
-      print("addPost====>body:$mappedBody");
+      debugPrint("addPost====>body:$mappedBody");
       Uint8List? thumbnailData =
           await generateThumbnail(File(assetPath?.value ?? ''));
       Uint8List? fileBytes = await tempPath?.readAsBytes();
@@ -211,6 +221,7 @@ class AddPostController extends GetxController {
       if (response3.statusCode == 200) {
         homeController.getAllPostData();
         clearController();
+
         dismissLoader();
         Get.back();
         contentUploadSuccessfullyDialog(
@@ -218,6 +229,8 @@ class AddPostController extends GetxController {
           title: MTexts.strVideoUploadSuccessTitle,
           subTitle: MTexts.strVideoUploadSuccessSubTitle,
         );
+        Get.find<SearchScreenController>()
+            .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
       } else {
         dismissLoader();
         showToast(title: responseDecoded['error']);

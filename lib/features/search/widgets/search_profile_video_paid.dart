@@ -1,5 +1,4 @@
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
-import 'package:coonch/features/purchase_content/controller/purchase_controller.dart';
 import 'package:coonch/features/purchase_content/widgets/purchase_content_dialog.dart';
 import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
@@ -18,7 +17,7 @@ class SearchProfileVideoPaid extends StatelessWidget {
     required this.contentId,
     required this.planType,
     required this.creatorId,
-    // required this.profileUrl,
+    required this.profileUrl,
   });
 
   // final PurchaseController purchaseController = Get.find<PurchaseController>();
@@ -32,7 +31,7 @@ class SearchProfileVideoPaid extends StatelessWidget {
   final String planType;
   final String creatorId;
 
-  // final String profileUrl;
+  final String profileUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +39,8 @@ class SearchProfileVideoPaid extends StatelessWidget {
       children: [
         const SizedBox(height: MSizes.smmd),
         ProfileDataRowPaid(
-          profileUrl: MImages.imgMyStatusProfile2,
-          // profileUrl: searchScreenController.filteredVideos[index].profilePicUrl,
+          // profileUrl: MImages.imgMyStatusProfile2,
+          profileUrl: profileUrl,
           username: username,
           userCategory: userCategory,
         ),

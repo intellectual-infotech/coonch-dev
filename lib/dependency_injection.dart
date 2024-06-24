@@ -12,10 +12,8 @@ import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
 
 Future<void> init() async {
-  final localCache = MLocalStorage();
 
-  await localCache.init();
-  Get.lazyPut<MLocalStorage>(() => localCache, fenix: true);
+  Get.put<MLocalStorage>(MLocalStorage()).init();
 
   Get.put<GetConnect>(GetConnect()); //initializing GetConnect
   Get.lazyPut<RestAPI>(

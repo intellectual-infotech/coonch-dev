@@ -5,8 +5,8 @@ class VisibleAnimator extends StatefulWidget {
     required this.child,
     required this.showController,
     required this.curve,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget child;
   final Curve curve;

@@ -9,10 +9,10 @@ class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
 
   @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+  VideoPlayerScreenState createState() => VideoPlayerScreenState();
 }
 
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+class VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   late VideoPlayerController videoPlayerController;
   ChewieController? chewieController;
@@ -24,7 +24,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   Future<void> initializePlayer(String url) async {
-    videoPlayerController = VideoPlayerController.network(url);
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
 
     await Future.wait([videoPlayerController.initialize()]);
     chewieController = ChewieController(

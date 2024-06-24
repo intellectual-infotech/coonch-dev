@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FloatingButtonAddPostContainer extends StatelessWidget {
-  FloatingButtonAddPostContainer({
+  const FloatingButtonAddPostContainer({
     super.key,
     required this.icon,
     required this.label,
     required this.onTap,
   });
 
-  String icon;
-  String label;
-  VoidCallback onTap;
+  final String icon;
+  final String label;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

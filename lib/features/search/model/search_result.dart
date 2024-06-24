@@ -20,6 +20,7 @@ class SearchResultModel {
   String profilePic;
   bool following;
   String subscription;
+  int? rewardPoints;
 
   SearchResultModel({
     required this.id,
@@ -33,6 +34,7 @@ class SearchResultModel {
     required this.profilePic,
     required this.following,
     required this.subscription,
+    required this.rewardPoints,
   });
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) => SearchResultModel(
@@ -47,6 +49,7 @@ class SearchResultModel {
     profilePic: json["profile_pic"],
     following: json["following"],
     subscription: json["subscription"],
+    rewardPoints: json["reward_points"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class SearchResultModel {
     "profile_pic": profilePic,
     "following": following,
     "subscription": subscription,
+    "reward_points": rewardPoints,
   };
 }

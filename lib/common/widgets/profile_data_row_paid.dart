@@ -1,13 +1,11 @@
-import 'package:coonch/features/purchase_content/controller/purchase_controller.dart';
+import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 
 class ProfileDataRowPaid extends StatelessWidget {
-  ProfileDataRowPaid({
+  const ProfileDataRowPaid({
     super.key,
     required this.profileUrl,
     required this.username,
@@ -27,18 +25,15 @@ class ProfileDataRowPaid extends StatelessWidget {
           margin: const EdgeInsets.all(MSizes.sm),
           height: 45,
           width: 45,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: MColors.borderStatus, width: 2),
-            color: Colors.white,
-          ),
-          // child: Image.asset(profileUrl),
-          child: Image.network(
-            profileUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(profileUrl);
-            },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.network(
+              profileUrl,
+              fit: BoxFit.fill,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(MImages.imgMyStatusProfile2);
+              },
+            ),
           ),
         ),
         Column(

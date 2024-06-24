@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 class TabItem extends StatelessWidget {
   const TabItem({
     required this.isActive,
-    Key? key,
+    super.key,
     this.imageData,
     this.imageName,
     this.activeColor = ThemeColors.accent900Color,
     this.inactiveColor = Colors.black,
-  }) : super(key: key);
+  });
   final String? imageData;
   final String? imageName;
   final bool isActive;

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 class MLocalStorage {
-  final GetStorage _storage = GetStorage();
+  final GetStorage _storage = GetStorage('UserCacheBox');
 
   GetStorage get storage => _storage;
 
@@ -31,8 +32,25 @@ class MLocalStorage {
     saveData(userDataKey, jsonEncode(value));
   }
 
+  keepUserSignIn(){
+     saveData("isLoggedIn", "true");
+     // storage.write("isLoggedIn", "true");
+  }
+
+  checkUserSignIn(){
+     return readData("isLoggedIn") ?? "false";
+     // return storage.read("isLoggedIn") ?? "false";
+  }
+
    dynamic getUserData() {
-    return jsonDecode(readData(userDataKey));
+     debugPrint("UserData Fetching from Local");
+     var userData = readData(userDataKey);
+     debugPrint("Fetched UserData: $userData");
+     if (userData != null) {
+       return jsonDecode(userData);
+     }
+     debugPrint("getUserData() gives null");
+     return null;
   }
 
   // Generic method to save data
@@ -50,8 +68,4 @@ class MLocalStorage {
     await storage.remove(key);
   }
 
-  // Clear all data in storage
-   Future<void> clearALl() async {
-    await storage.erase();
-  }
 }

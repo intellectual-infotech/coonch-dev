@@ -2,6 +2,7 @@
 import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class RestAPI {
@@ -14,15 +15,15 @@ class RestAPI {
     final localStorage = Get.find<MLocalStorage>();
 
     String fullUrl = APIConstants.strBaseUrlWithPort + url;
-    print('getDataMethod=====>URL::$fullUrl');
-    print('getDataMethod=====>query::$data');
-    print('getDataMethod=====>Token::${localStorage.getToken() ?? ''}');
+    debugPrint('getDataMethod=====>URL::$fullUrl');
+    debugPrint('getDataMethod=====>query::$data');
+    debugPrint('getDataMethod=====>Token::${localStorage.getToken() ?? ''}');
 
     Response response = await connect.get(fullUrl,
         query: data,
         headers: {'Authorization': 'Bearer ${localStorage.getToken() ?? ''}'});
 
-    print('getDataMethod=====>response::${response}');
+    debugPrint('getDataMethod=====>response::$response');
 
     if (response.statusCode == 200) {
       return response.body;
@@ -42,30 +43,30 @@ class RestAPI {
     //body data
     try {
       String fullUrl = APIConstants.strBaseUrlWithPort + url;
-      print('postDataMethod=====>URL::$fullUrl');
-      print('postDataMethod=====>data::$data');
+      debugPrint('postDataMethod=====>URL::$fullUrl');
+      debugPrint('postDataMethod=====>data::$data');
       Response response;
       if (headers != null) {
         response = await connect.post(fullUrl, data, headers: headers);
       } else {
-        print("header is null");
+        // print("header is null");
         response = await connect.post(fullUrl, data);
       }
 
-      print('postDataMethod=====>response::${response.body}');
-      print('postDataMethod statusCode =====>response::${response.statusCode}');
+      debugPrint('postDataMethod=====>response::${response.body}');
+      debugPrint('postDataMethod statusCode =====>response::${response.statusCode}');
 
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        print("response.body.toString()");
-        print(response.body.toString());
+        debugPrint("response.body.toString()");
+        debugPrint(response.body.toString());
         showToast(title: response.body.toString());
         return response.body;
       }
     } catch (e) {
-      print("print e");
-      print(e);
+      debugPrint("print e");
+      debugPrint(e.toString());
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:coonch/utils/constants/colors.dart';
-import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,7 +30,7 @@ class ExploreCategoriesOption extends StatelessWidget {
             const SizedBox(width: MSizes.spaceBtwItems),
             Text(
               title,
-              style: TextStyle(fontSize: MSizes.fontSizeMd),
+              style: const TextStyle(fontSize: MSizes.fontSizeMd),
             ),
           ],
         ),

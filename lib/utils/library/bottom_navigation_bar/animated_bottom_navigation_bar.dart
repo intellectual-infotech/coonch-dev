@@ -116,14 +116,13 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     this.hideAnimationController,
     this.backgroundGradient,
     this.blurEffect = false,
-    Key? key,
+    super.key,
   })  : assert(imageIcons != null || itemCount != null, ""),
         assert(
           ((itemCount ?? imageIcons!.length) >= 2) &&
               ((itemCount ?? imageIcons!.length) <= 5),
           "",
-        ),
-        super(key: key) {
+        ) {
     if (gapLocation == GapLocation.end) {
       if (rightCornerRadius != 0) {
         throw NonAppropriatePathException(
@@ -295,11 +294,11 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
   static const _defaultSplashRadius = 24.0;
 
   @override
-  _AnimatedBottomNavigationBarState createState() =>
-      _AnimatedBottomNavigationBarState();
+  AnimatedBottomNavigationBarState createState() =>
+      AnimatedBottomNavigationBarState();
 }
 
-class _AnimatedBottomNavigationBarState
+class AnimatedBottomNavigationBarState
     extends State<AnimatedBottomNavigationBar> with TickerProviderStateMixin {
   late ValueListenable<ScaffoldGeometry> geometryListenable;
 

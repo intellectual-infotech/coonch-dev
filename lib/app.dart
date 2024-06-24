@@ -11,15 +11,16 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localCache = Get.find<MLocalStorage>();
+    debugPrint("localCache.checkUserSignIn() ${localCache.checkUserSignIn() }");
     return GetMaterialApp(
       themeMode: ThemeMode.system,
       theme: ThemeData(
           // useMaterial3: false
           ),
       home:
-          localCache.getToken() == null || (localCache.getToken() ?? '').isEmpty
-              ? LoginScreen()
-              : DashBoardScreen(),
+          (localCache.checkUserSignIn() == "true")
+              ? DashBoardScreen()
+              : LoginScreen(),
     );
   }
 }

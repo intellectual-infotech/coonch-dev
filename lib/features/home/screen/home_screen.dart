@@ -1,14 +1,13 @@
 import 'package:coonch/api.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
-import 'package:coonch/features/home/models/postDataModel.dart';
+import 'package:coonch/features/home/models/post_data_model.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';
 import 'package:coonch/features/home/widgets/audio_content_home.dart';
 import 'package:coonch/features/home/widgets/choice_selection_home.dart';
 import 'package:coonch/features/home/widgets/text_content_home.dart';
 import 'package:coonch/features/home/widgets/video_content_home.dart';
-import 'package:coonch/features/profile/screen/other_user_profile_screen.dart';
 import 'package:coonch/features/search/screen/search_user_profile_screen.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
@@ -129,13 +128,15 @@ class HomeScreen extends StatelessWidget {
                                   await homeController.checkIfFollow(
                                       searchedUserId: searchedUserId);
 
-                              print("Is following: $isFollowing");
+                              debugPrint("Is following: $isFollowing");
 
-                              Get.to(SearchUserProfileScreen(
-                                searchedUserId: searchedUserId,
-                                following: isFollowing,
-                                subscription: "subscription", /// Change
-                              ));
+                              Future.delayed(const Duration(seconds: 1), (){
+                                Get.to(SearchUserProfileScreen(
+                                  searchedUserId: searchedUserId,
+                                  following: isFollowing,
+                                  subscription: "subscription", /// Change
+                                ));
+                              });
                             },
                             child: postDataModel.contentType == "audio"
                                 ? AudioContentHome(
@@ -146,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                                         userCategory:
                                             postDataModel.category ?? '',
                                         audioUrl:
-                                            '${APIConstants.strBaseUrl}/coonch_nodejs/backend/audios/${postDataModel.audioPath}',
+                                            '${APIConstants.strAudiosBaseUrl}${postDataModel.audioPath}',
                                         likesNo: 897,
                                         commentNo: 231,
                                         description:
@@ -164,9 +165,9 @@ class HomeScreen extends StatelessWidget {
                                             userName:
                                                 postDataModel.username ?? '',
                                             thumbnailUrl:
-                                                '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.thumbnailPath}',
+                                                '${APIConstants.strVideosBaseUrl}${postDataModel.thumbnailPath}',
                                             videoUrl:
-                                                '${APIConstants.strBaseUrl}coonch_nodejs/videos/${postDataModel.videoPath}',
+                                                '${APIConstants.strVideosBaseUrl}${postDataModel.videoPath}',
                                             description:
                                                 postDataModel.description ??
                                                     ''),

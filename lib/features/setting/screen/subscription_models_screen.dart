@@ -32,7 +32,7 @@ class SubscriptionModelsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: MSizes.spaceBtwTexts),
-                Text(
+                const Text(
                     "Sign up now for a free trial period to explore all features of our app!"),
                 const SizedBox(height: MSizes.spaceBtwTexts),
                 const Text(
@@ -90,7 +90,7 @@ class SubscriptionModelsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: MSizes.spaceBtwTexts),
-                Text(
+                const Text(
                     "After the free trial, continue enjoying all features with our monthly subscription plan."),
                 const SizedBox(height: MSizes.spaceBtwTexts),
                 const Text(
@@ -148,7 +148,7 @@ class SubscriptionModelsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: MSizes.spaceBtwTexts),
-                Text(
+                const Text(
                     "Upgrade to our discounted 6-monthly or yearly subscription plan for additional savings!"),
                 const SizedBox(height: MSizes.spaceBtwTexts),
                 const Text(

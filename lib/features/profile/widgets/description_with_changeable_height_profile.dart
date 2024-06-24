@@ -1,4 +1,3 @@
-import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';

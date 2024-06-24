@@ -2,15 +2,15 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/common/widgets/loader_dialogue.dart';
-import 'package:coonch/features/auth/models/UserDataModel.dart';
+import 'package:coonch/features/auth/models/user_data_model.dart';
 import 'package:coonch/features/search/controllers/search_screen_controller.dart';
+import 'package:coonch/features/search/model/search_user_profile_result.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 
 class ProfileController extends GetxController {
   RxInt currIndex = 0.obs;
@@ -27,8 +27,8 @@ class ProfileController extends GetxController {
       TextEditingController();
   TextEditingController editProfileConfirmPasswordController =
       TextEditingController();
-  Rx<UserDataModel>? userDataModel = UserDataModel().obs;
-  Rx<User>? otherUser = User().obs;
+  Rx<UserModel>? userDataModel = UserModel().obs;
+  Rx<UserModel>? otherUser = UserModel().obs;
   RxBool isLoading = false.obs;
 
   late final MLocalStorage localStorage;
@@ -63,17 +63,17 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
-    userDataModel = UserDataModel.fromJson(localStorage.getUserData()).obs;
+    userDataModel = UserModel.fromJson(localStorage.getUserData()).obs;
     // fetchLoggedInUserProfile();
   }
 
   setUserProfileData() {
     editProfileFirstNameController.text =
-        userDataModel?.value.user?.displayName ?? '';
+        userDataModel?.value.displayName ?? '';
     editProfileLastNameController.text =
-        userDataModel?.value.user?.username ?? '';
-    editProfileBioController.text = userDataModel?.value.user?.bio ?? '';
-    editProfilePhoneController.text = userDataModel?.value.user?.phone ?? '';
+        userDataModel?.value.username ?? '';
+    editProfileBioController.text = userDataModel?.value.bio ?? '';
+    editProfilePhoneController.text = userDataModel?.value.phone ?? '';
   }
 
   clearPassword() {
@@ -81,9 +81,83 @@ class ProfileController extends GetxController {
     editProfileConfirmPasswordController.clear();
   }
 
-  void fetchLoggedInUserProfile() async {
-    await searchController.fetchLoggedInUserProfile();
+  var userProfileResult = Rxn<SearchUserProfileResult>();
+
+
+  /// Searched User Profile Get Contents For Own Profile Screen
+  Future<void> searchOwnProfileAPI({
+    required String searchUserId,
+    Function()? callback,
+    String moneyType = 'free',
+  }) async {
+    var response = await restAPI.postDataMethod("api/getposts/getMyPosts",
+        data: {
+          "userId": searchUserId,
+          "page": 0,
+          "pageSize": 2,
+          "moneyType": moneyType
+        },
+        headers: {
+          'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+        });
+
+    if (response != null) {
+      // Filter and assign the content based on moneyType
+      List<dynamic> filteredAudios = [];
+      List<dynamic> filteredVideos = [];
+      List<dynamic> filteredTexts = [];
+
+      if (response.containsKey('audios')) {
+        filteredAudios = response['audios']
+            .where((audio) => audio['moneyType'] == moneyType)
+            .toList();
+        debugPrint("filteredAudios :: --> $filteredAudios");
+      }
+
+      if (response.containsKey('videos')) {
+        filteredVideos = response['videos']
+            .where((video) => video['moneyType'] == moneyType)
+            .toList();
+        debugPrint("filteredVideos :: --> $filteredVideos");
+      }
+
+      if (response.containsKey('text')) {
+        filteredTexts = response['text']
+            .where((text) => text['moneyType'] == moneyType)
+            .toList();
+        debugPrint("filteredTexts :: --> $filteredTexts");
+      }
+
+      // Assign the filtered content to the userProfileResult
+      userProfileResult.value = SearchUserProfileResult.fromJson({
+        'audios': filteredAudios,
+        'videos': filteredVideos,
+        'text': filteredTexts
+      });
+      debugPrint(
+          "userProfileResult.value videos :: --> ${userProfileResult.value!
+              .videos}");
+      debugPrint(
+          "userProfileResult.value text :: --> ${userProfileResult.value!
+              .text}");
+      debugPrint(
+          "userProfileResult.value audios  :: --> ${userProfileResult.value!
+              .audios}");
+      debugPrint(" searchUserProfileAPI response :: --> $response");
+      isLoading.value = false;
+      update(["searchedProfilePage"]);
+      if (callback != null) {
+        callback();
+      }
+      // callback3!();
+
+    } else {
+      debugPrint("searchUserProfileAPI response is null or empty");
+      showToast(title: "searchUserProfileAPI response is null or empty");
+      // callback3!();
+    }
   }
+
 
   /// Edit profile
   Future<void> callUpdateProfile() async {
@@ -91,11 +165,11 @@ class ProfileController extends GetxController {
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/editprofile",
         data: {
-          "userid": userDataModel?.value.user?.userid ?? '',
-          "display_name": editProfileFirstNameController.text ?? "",
-          "email": userDataModel?.value.user?.email ?? '',
-          "bio": editProfileBioController.text ?? '',
-          "phone": editProfilePhoneController.text ?? ''
+          "userid": userDataModel?.value.userid ?? '',
+          "display_name": editProfileFirstNameController.text,
+          "email": userDataModel?.value.email ?? '',
+          "bio": editProfileBioController.text,
+          "phone": editProfilePhoneController.text
         },
         headers: {
           'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
@@ -105,7 +179,7 @@ class ProfileController extends GetxController {
       showToast(title: "callUpdateProfile response null or empty");
       return;
     }
-    print("callUpdateProfile=====>response::${response}");
+    debugPrint("callUpdateProfile=====>response::$response");
     if (response['message'] == "Profile updated successfully.") {
       await callGetProfile(
         callback: () {
@@ -128,31 +202,31 @@ class ProfileController extends GetxController {
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/getuserInfo",
         data: {
-          "userid": otherUserId ?? userDataModel?.value.user?.userid ?? '',
+          "userid": otherUserId ?? userDataModel?.value.userid ?? '',
         },
         headers: {
           'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
 
-    print("callGetProfile=====>response::${response}");
-    print("otherUserId::${otherUserId}");
-    print("userId::${userDataModel?.value.user?.userid}");
+    debugPrint("callGetProfile=====>response::$response");
+    debugPrint("otherUserId::$otherUserId");
+    debugPrint("userId::${userDataModel?.value.userid}");
     // print("userToken::${userDataModel?.value.token}");
 
     if (response != null) {
       if (otherUserId == null) {
-        userDataModel!.value.user = User.fromJson(response);
+        userDataModel!.value = UserModel.fromJson(response);
         userDataModel!.refresh();
       } else {
-        print("otheruserId Data is Set");
-        otherUser?.value = User.fromJson(response);
+        debugPrint("otheruserId Data is Set");
+        otherUser?.value = UserModel.fromJson(response);
       }
       if (callback != null) {
         callback();
       }
     } else {
       if (response == null || response?.isEmpty) {
-        print("callGetProfile response is null");
+        debugPrint("callGetProfile response is null");
         showToast(title: "callGetProfile response is null");
         return;
       }
@@ -160,15 +234,13 @@ class ProfileController extends GetxController {
     isLoading.value = false;
   }
 
-  /// Get Own Profile Data
-
 
   /// Change Password
   Future<void> changePasswordAPI() async {
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/resetpassword",
         data: {
-          "email": userDataModel?.value.user?.email ?? "",
+          "email": userDataModel?.value.email ?? "",
           "oldpass": editProfileNewPasswordController.text,
 
           /// Problem
@@ -177,7 +249,7 @@ class ProfileController extends GetxController {
         headers: {
           'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
-    print("changePasswordAPI=====>response::${response}");
+    debugPrint("changePasswordAPI=====>response::$response");
     if (response == null || response?.isEmpty) {
       showToast(title: "changePasswordAPI response null or empty");
       return;

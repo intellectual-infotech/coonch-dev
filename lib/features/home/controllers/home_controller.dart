@@ -1,9 +1,10 @@
 import 'package:coonch/common/methods/method.dart';
-import 'package:coonch/features/auth/models/UserDataModel.dart';
-import 'package:coonch/features/home/models/postDataModel.dart';
+import 'package:coonch/features/auth/models/user_data_model.dart';
+import 'package:coonch/features/home/models/post_data_model.dart';
 import "package:coonch/features/setting/controllers/setting_controller.dart";
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/local_storage/storage_utility.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -19,7 +20,7 @@ class HomeController extends GetxController {
   ];
 
   late final MLocalStorage localStorage;
-  Rx<UserDataModel>? currUser = UserDataModel().obs;
+  Rx<UserModel>? currUser = UserModel().obs;
 
   // Variables for pagination
   int currentPage = 0;
@@ -31,7 +32,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
-    currUser = UserDataModel.fromJson(localStorage.getUserData()).obs;
+    currUser = UserModel.fromJson(localStorage.getUserData()).obs;
     getAllPostData(); // Initial load
   }
 
@@ -42,20 +43,20 @@ class HomeController extends GetxController {
     try {
       var response =
           await restAPI.postDataMethod("api/follow/checkIfFollow", data: {
-        "myId": currUser?.value.user?.id ?? "",
+        "myId": currUser?.value.id ?? "",
         "otherId": searchedUserId,
       }, headers: {
         'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
       });
 
-      print("checkIfFollow====>response::$response");
+      debugPrint("checkIfFollow====>response::$response");
       if (response == null || response?.isEmpty) {
         showToast(title: "addTextPost response null or empty");
         return false;
       }
       return response['follows'] ?? false;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return false;
     }
   }
@@ -71,13 +72,13 @@ class HomeController extends GetxController {
       postDataModelList.clear();
     }
 
-    UserDataModel? userDataModel;
+    UserModel? userDataModel;
     if (Get.isRegistered<SettingController>()) {
       userDataModel = Get.find<SettingController>().userDataModel?.value;
     }
     var response =
         await restAPI.postDataMethod("api/getposts/fetchallFreePosts", data: {
-      "userId": userDataModel?.user?.userid ?? '',
+      "userId": userDataModel?.userid ?? '',
       "page": currentPage.toString(),
       "pageSize": pageSize.toString(),
       "filters": selectedCategory,
@@ -89,7 +90,6 @@ class HomeController extends GetxController {
       isLoading = false;
       return;
     }
-    print("getAllPostData=====>res::$response");
     if (response?.isNotEmpty ?? false) {
       List? responseList = response ?? [];
       if (responseList!.isNotEmpty) {
@@ -101,8 +101,8 @@ class HomeController extends GetxController {
           postDataModelList.addAll(tempPostDataList);
         }
         for (var post in tempPostDataList) {
-          print("Profile Picture URL: ${post.profilePic}");
-          print("Profile username : ${post.username}");
+          debugPrint("Profile Picture URL: ${post.profilePic}");
+          debugPrint("Profile username : ${post.username}");
         }
 
         if (tempPostDataList.length < pageSize) {

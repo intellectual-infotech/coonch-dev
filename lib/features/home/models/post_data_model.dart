@@ -54,7 +54,7 @@ class PostDataModel {
     contentType = json['content_type'];
     textContent = json['textContent'];
     username = json['username'];
-    profilePic = json['profilePic'];
+    profilePic = json['profile_pic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,7 +82,7 @@ class PostDataModel {
     data['content_type'] = contentType;
     data['textContent'] = textContent;
     data['username'] = username;
-    data['profilePic'] = profilePic;
+    data['profile_pic'] = profilePic;
     return data;
   }
 }

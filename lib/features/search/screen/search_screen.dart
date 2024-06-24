@@ -1,3 +1,4 @@
+import 'package:coonch/api.dart';
 import 'package:coonch/common/widgets/image_builder.dart';
 import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/search/model/search_result.dart';
@@ -56,7 +57,12 @@ class SearchScreen extends StatelessWidget {
                 } else if (searchScreenController.searchResults.isEmpty) {
                   return const Text('No results found');
                 }
-                return ListView.builder(
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      height: 10,
+                    );
+                  },
                   itemCount: searchScreenController.searchResults.length,
                   itemBuilder: (context, index) {
                     SearchResultModel user =
@@ -69,7 +75,9 @@ class SearchScreen extends StatelessWidget {
                           subscription: user.subscription,
                         ));
                       },
-                      leading: ImageBuilder(url: user.profilePic),
+                      leading: ImageBuilder(
+                          url:
+                              "${APIConstants.strProfilePicBaseUrl}${user.profilePic}"),
                       title: Text(user.username),
                       onLongPress: () {
                         Get.to(SubscriptionScreen(
@@ -77,7 +85,12 @@ class SearchScreen extends StatelessWidget {
                         ));
                       },
                       trailing: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          searchScreenController.followUserAPI(
+                            followingId: user.userid,
+                            followId: searchScreenController.loggedInUser?.value.userid ?? "",
+                          );
+                        },
                         child: user.following
                             ? const Text("Unfollow")
                             : const Text("Follow"),

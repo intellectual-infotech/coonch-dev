@@ -16,8 +16,8 @@ typedef TailBuilder = Path Function(
 
 class PositionedTooltip extends SingleChildRenderObjectWidget {
   const PositionedTooltip({
-    Key? key,
-    required Widget child,
+    super.key,
+    required Widget super.child,
     required this.margin,
     required this.targetSize,
     required this.target,
@@ -34,7 +34,7 @@ class PositionedTooltip extends SingleChildRenderObjectWidget {
     required this.shadow,
     required this.elevation,
     required this.scrollPosition,
-  }) : super(key: key, child: child);
+  });
 
   final EdgeInsetsGeometry margin;
 

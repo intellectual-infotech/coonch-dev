@@ -1,15 +1,14 @@
 import 'package:coonch/common/widgets/common_elevated_button.dart';
 import 'package:coonch/common/widgets/common_text_field.dart';
 import 'package:coonch/features/auth/controllers/auth_controller.dart';
-import 'package:coonch/features/auth/screens/create_password.dart';
 import 'package:coonch/features/auth/widgets/auth_heading.dart';
 import 'package:coonch/features/auth/widgets/term_and_policy.dart';
+import 'package:coonch/utils/constants/sizes.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../utils/constants/sizes.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});

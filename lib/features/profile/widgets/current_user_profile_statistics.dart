@@ -22,7 +22,7 @@ class CurrentUserProfileStatistics extends StatelessWidget {
           /// Posts
           UserStatisticsColumn(
             count: profileController
-                .userDataModel?.value.user?.totalPosts
+                .userDataModel?.value.totalPosts
                 ?.toString() ??
                 "",
             title: MTexts.strPosts,
@@ -35,7 +35,7 @@ class CurrentUserProfileStatistics extends StatelessWidget {
           ),
           UserStatisticsColumn(
             count: profileController
-                .userDataModel?.value.user?.followersCount
+                .userDataModel?.value.followersCount
                 ?.toString() ??
                 '',
             title: MTexts.strFriends,
@@ -49,7 +49,7 @@ class CurrentUserProfileStatistics extends StatelessWidget {
           ),
           UserStatisticsColumn(
             count: profileController
-                .userDataModel?.value.user?.followingCount
+                .userDataModel?.value.followingCount
                 ?.toString() ??
                 '',
             title: MTexts.strFollowing,

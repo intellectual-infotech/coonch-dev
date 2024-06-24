@@ -4,11 +4,10 @@ import 'dart:io';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
-import 'package:coonch/features/auth/models/UserDataModel.dart';
+import 'package:coonch/features/auth/models/user_data_model.dart';
 import 'package:coonch/features/auth/screens/create_password.dart';
 import 'package:coonch/features/auth/screens/login_screen.dart';
 import 'package:coonch/features/dashboard/screens/dashboard.dart';
-import 'package:coonch/features/home/screen/home_screen.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
@@ -28,11 +27,13 @@ class AuthController extends GetxController {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController =
-      TextEditingController(text: "viveklumbhani69@gmail.com");
+  TextEditingController emailController = TextEditingController(
+    text: "test2@gmail.com"
+  );
   TextEditingController resetEmailController = TextEditingController();
-  TextEditingController passwordController =
-      TextEditingController(text: "vivek123");
+  TextEditingController passwordController = TextEditingController(
+    text: "123456"
+  );
   TextEditingController resetPasswordController = TextEditingController();
   TextEditingController resetOTPController = TextEditingController();
   TextEditingController resetConfirmPasswordController =
@@ -84,14 +85,23 @@ class AuthController extends GetxController {
       return;
     }
     if (response['message'] == "Login successful") {
-      UserDataModel userDataModel = UserDataModel.fromJson(response);
+      UserModel userDataModel = UserModel.fromJson(response['user']);
 
       final localStorage = Get.find<MLocalStorage>();
 
       await localStorage.setUserData(userDataModel.toJson());
+      // debugPrint("response token for user${response["token"]}");
       await localStorage.setToken(response["token"]);
-      Get.to(DashBoardScreen());
-      Get.find<ProfileController>().callGetProfile();
+      var currLogInGetToken = localStorage.getToken();
+      debugPrint("currLogInGetToken ==> $currLogInGetToken");
+      // print("currLogInGetToken ==> $currLogInGetToken");
+      if(keepSignedIn.value){
+        localStorage.keepUserSignIn();
+      }
+      Future.delayed(const Duration(seconds: 1), () {
+        Get.offAll(DashBoardScreen());
+        Get.find<ProfileController>().callGetProfile();
+      });
     } else {
       showToast(title: response.error.toString());
     }
@@ -108,7 +118,7 @@ class AuthController extends GetxController {
       showToast(title: "Forget password Response is Null or Empty");
       return;
     }
-    print("forgotPasswordOTPApi=====>response::${response}");
+    debugPrint("forgotPasswordOTPApi=====>response::$response");
     if (response == "Password reset email sent successfully.") {
       Get.to(CreatePasswordScreen());
     } else {
@@ -127,7 +137,7 @@ class AuthController extends GetxController {
         "newPassword": resetPasswordController.text
       },
     );
-    print("createNewPasswordVerifyOTPApi=====>response::${response}");
+    debugPrint("createNewPasswordVerifyOTPApi=====>response::$response");
     if (response == null || response?.isEmpty) {
       showToast(
           title: "createNewPasswordVerifyOTPApi Response is Null or Empty");
@@ -182,7 +192,7 @@ class AuthController extends GetxController {
         showToast(title: MTexts.strPlzEnterValidPhoneNum);
         return;
       }
-      print(
+      debugPrint(
           "Signup URL : ${APIConstants.strBaseUrlWithPort}${APIConstants.strDefaultAuthPath}/register");
 
       var request = http.MultipartRequest(
@@ -199,7 +209,7 @@ class AuthController extends GetxController {
       }.map((k, v) => MapEntry(k.toString(), v.toString()));
       request.fields.addAll(mappedBody);
 
-      print("mappedBody : $mappedBody");
+      debugPrint("mappedBody : $mappedBody");
 
       Uint8List? fileBytes = await profile.readAsBytes();
       final http.MultipartFile imgRequest = http.MultipartFile.fromBytes(
@@ -213,44 +223,55 @@ class AuthController extends GetxController {
 
       http.StreamedResponse response = await request.send();
       http.Response response3 = await http.Response.fromStream(response);
-      print("response3 : ${response3.body}");
+      debugPrint("response3 : ${response3.body}");
       dynamic jsonResponse = jsonDecode(response3.body);
 
       var encodeFirst = json.encode(response3.body);
       var data = json.decode(encodeFirst);
-      print("dataa : $data");
+      debugPrint("dataa : $data");
 
       if (jsonResponse == null || jsonResponse.isEmpty) {
         showToast(title: "onSignUp jsonResponse is null or empty");
         return;
       }
 
-      print("Sign up =======>jsonResponse::$jsonResponse");
+      debugPrint("Sign up =======>jsonResponse::$jsonResponse");
       if (response.statusCode == 200) {
         if (jsonResponse.containsKey("msg")) {
           String message = jsonResponse["msg"];
           if (message == "Account created successfully") {
             if (jsonResponse["user"] != null) {
-              UserDataModel userDataModel =
-                  UserDataModel.fromJson(jsonResponse["user"]);
-              print("userDataModel on SignUp ===> {$userDataModel}");
+              UserModel userDataModel =
+                  UserModel.fromJson(jsonResponse["user"]);
+              debugPrint("${jsonResponse["user"]}");
+              debugPrint("${jsonResponse["token"]}");
+              debugPrint(
+                  "userDataModel on SignUp ===> {${userDataModel.toJson()}}");
               final localStorage = Get.find<MLocalStorage>();
-              await localStorage.setToken(jsonResponse["token"]);
+              debugPrint(
+                  "printing userDataModel.toJson ===> ${userDataModel.toJson()}");
               await localStorage.setUserData(userDataModel.toJson());
+              await localStorage.setToken(jsonResponse["token"]);
+              await Future.delayed(const Duration(seconds: 1));
+              var currUserToken = localStorage.getToken();
+              var currUserData = await localStorage.getUserData();
+              debugPrint("current user Token on SignUp ====> $currUserToken");
+              debugPrint("current user on SignUp ====> $currUserData");
+
               showToast(title: message);
               Future.delayed(const Duration(seconds: 1), () {
-                Get.offAll(HomeScreen());
+                Get.offAll(DashBoardScreen());
               });
             }
           }
         } else {
-          print("No message found in the response.");
+          debugPrint("No message found in the response.");
         }
       } else {
-        print(response.reasonPhrase);
+        debugPrint(response.reasonPhrase);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

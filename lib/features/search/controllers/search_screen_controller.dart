@@ -1,6 +1,6 @@
 import 'package:coonch/api.dart';
 import 'package:coonch/common/methods/method.dart';
-import 'package:coonch/features/auth/models/UserDataModel.dart';
+import 'package:coonch/features/auth/models/user_data_model.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';
@@ -17,12 +17,11 @@ class SearchScreenController extends GetxController {
   TextEditingController searchProfileController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
 
-
-  Rx<User>? searchedUser = User().obs;
-  Rx<UserDataModel>? loggedInUser = UserDataModel().obs;
+  Rx<UserModel>? searchedUser = UserModel().obs;
+  Rx<UserModel>? loggedInUser = UserModel().obs;
   List<SearchResultModel> searchResults = <SearchResultModel>[];
   var userProfileResult = Rxn<SearchUserProfileResult>();
-  RxBool isLoading = true.obs;
+  RxBool isLoading = false.obs;
   RxBool isSearchStart = false.obs;
   late final MLocalStorage localStorage;
   RxInt currIndex = 0.obs;
@@ -56,7 +55,9 @@ class SearchScreenController extends GetxController {
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
-    loggedInUser = UserDataModel.fromJson(localStorage.getUserData()).obs;
+    loggedInUser = UserModel
+        .fromJson(localStorage.getUserData())
+        .obs;
     searchProfileController.addListener(() {
       if (searchProfileController.text.isNotEmpty) {
         searchUserAPI();
@@ -71,9 +72,12 @@ class SearchScreenController extends GetxController {
 
   /// Searching List
   Future<void> searchUserAPI() async {
-    UserDataModel? userDataModel;
+    UserModel? userDataModel;
     if (Get.isRegistered<SettingController>()) {
-      userDataModel = Get.find<SettingController>().userDataModel?.value;
+      userDataModel = Get
+          .find<SettingController>()
+          .userDataModel
+          ?.value;
     }
     searchResults.clear();
     isSearchStart.value = false;
@@ -81,14 +85,13 @@ class SearchScreenController extends GetxController {
         "${APIConstants.strDefaultSearchPath}searchUser",
         data: {
           "searchString": searchProfileController.text,
-          "myId": userDataModel?.user?.userid ?? ''
+          "myId": userDataModel?.userid ?? ''
         },
         headers: {
           'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
         });
-    print("searchUserAPI=====> response:: ${response}");
-    print(userDataModel?.user?.userid ?? '');
-    // print();
+    debugPrint("searchUserAPI=====> response:: $response");
+    debugPrint(userDataModel?.userid ?? '');
 
     if (response == null || response?.isEmpty) {
       isSearchStart.value = true;
@@ -102,20 +105,24 @@ class SearchScreenController extends GetxController {
 
       // Retrieve the value of following and print or store it as needed
       bool isFollowing = user['following'];
-      bool subscription = user['subscription'];
-      print('User ID: ${user['userid']}, Following: $isFollowing');
-      print('User ID: ${user['subscription']}, subscription: $subscription');
+      String subscription = user['subscription'];
+      debugPrint('User ID: ${user['userid']}, Following: $isFollowing');
+      debugPrint(
+          'User ID: ${user['subscription']}, subscription: $subscription');
     }
 
     update();
   }
 
-  /// Searched User Profile
-  Future<void> searchUserProfileAPI(
-      {required String searchUserId,
-      Function()? callback,
-      String moneyType = 'free'}) async {
-    isLoading.value = true;
+  /// Searched User Profile Get Contents For Search Person
+  Future<void> searchUserProfileAPI({
+    required String searchUserId,
+    Function()? callback,
+    String moneyType = 'free',
+    Function()? callback2,
+    Function()? callback3,
+  }) async {
+    callback2!();
     var response = await restAPI.postDataMethod("api/getposts/getMyPosts",
         data: {
           "userId": searchUserId,
@@ -137,21 +144,21 @@ class SearchScreenController extends GetxController {
         filteredAudios = response['audios']
             .where((audio) => audio['moneyType'] == moneyType)
             .toList();
-        print("filteredAudios :: --> $filteredAudios");
+        debugPrint("filteredAudios :: --> $filteredAudios");
       }
 
       if (response.containsKey('videos')) {
         filteredVideos = response['videos']
             .where((video) => video['moneyType'] == moneyType)
             .toList();
-        print("filteredVideos :: --> $filteredVideos");
+        debugPrint("filteredVideos :: --> $filteredVideos");
       }
 
       if (response.containsKey('text')) {
         filteredTexts = response['text']
             .where((text) => text['moneyType'] == moneyType)
             .toList();
-        print("filteredTexts :: --> $filteredTexts");
+        debugPrint("filteredTexts :: --> $filteredTexts");
       }
 
       // Assign the filtered content to the userProfileResult
@@ -160,25 +167,47 @@ class SearchScreenController extends GetxController {
         'videos': filteredVideos,
         'text': filteredTexts
       });
-      print(
-          "userProfileResult.value :: --> ${userProfileResult.value!.videos}");
-      print("userProfileResult.value :: --> ${userProfileResult.value!.text}");
-      print(
-          "userProfileResult.value :: --> ${userProfileResult.value!.audios}");
-      print(" searchUserProfileAPI response :: --> $response");
-
+      debugPrint(
+          "userProfileResult.value videos :: --> ${userProfileResult.value!
+              .videos}");
+      debugPrint(
+          "userProfileResult.value text :: --> ${userProfileResult.value!
+              .text}");
+      debugPrint(
+          "userProfileResult.value audios  :: --> ${userProfileResult.value!
+              .audios}");
+      debugPrint(" searchUserProfileAPI response :: --> $response");
+      isLoading.value = false;
+      update(["searchedProfilePage"]);
       if (callback != null) {
         callback();
       }
-      isLoading.value = false;
+      callback3!();
+
     } else {
-      print("searchUserProfileAPI response is null or empty");
-      isLoading.value = false;
-      return;
+      debugPrint("searchUserProfileAPI response is null or empty");
+      showToast(title: "searchUserProfileAPI response is null or empty");
+     callback3!();
     }
   }
 
-  Future<void> fetchLoggedInUserProfile() async {
-    await searchUserProfileAPI(searchUserId: loggedInUser?.value.user?.userid ?? "");
+  Future<void> followUserAPI(
+      {required String followingId, required String followId}) async {
+    try {
+      var response = await restAPI.postDataMethod("api/follow/follow", data: {
+        "followingid": followingId,
+        "followid": followId,
+      }, headers: {
+        'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+      });
+
+      if (response['message'] == "Successfully followed new person") {
+        showToast(title: "Successfully followed new person");
+      } else {
+        showToast(title: "Something Went Wrong", subTitle: response['message']);
+      }
+    }catch (e){
+      print(e.toString());
+    }
   }
 }

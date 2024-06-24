@@ -29,7 +29,7 @@ class TextWithBlueTik extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: MSizes.spaceBtwTexts),
+        const SizedBox(height: MSizes.spaceBtwTexts),
       ],
     );
   }

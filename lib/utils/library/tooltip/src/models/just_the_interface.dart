@@ -20,7 +20,7 @@ typedef ContentBuilder = Widget Function(BuildContext context, Widget content);
 /// that is only closed by tapping on the target widget or outside the screen.
 /// {@endtemplate}
 abstract class JustTheInterface extends StatefulWidget {
-  const JustTheInterface({Key? key}) : super(key: key);
+  const JustTheInterface({super.key});
 
   static SingleChildRenderObjectWidget defaultAnimatedTransitionBuilder(
     BuildContext context,

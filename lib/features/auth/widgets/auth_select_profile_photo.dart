@@ -45,11 +45,11 @@ class _AuthSelectProfilePhotoState extends State<AuthSelectProfilePhoto> {
         ),
         child: Center(
           child: widget.isFile != null
-              ? Container(
-                  child:
-                      CircleAvatar(backgroundImage: FileImage(widget.isFile!)),
+              ? SizedBox(
                   height: 77,
                   width: 77,
+                  child:
+                      CircleAvatar(backgroundImage: FileImage(widget.isFile!)),
                 )
               : StringUtils.isNotNullOrEmpty(widget.imgString)
                   ? SvgPicture.asset(widget.imgString!)

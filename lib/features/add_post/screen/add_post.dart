@@ -16,13 +16,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class AddPostScreen extends StatelessWidget {
-  String? postType;
-
   AddPostScreen(this.postType, {super.key});
 
+  final String? postType;
   final AddPostController addPostController = Get.find<AddPostController>();
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(

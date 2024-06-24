@@ -1,4 +1,3 @@
-import 'package:coonch/common/methods/method.dart';
 import 'package:coonch/features/purchase_content/controller/purchase_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

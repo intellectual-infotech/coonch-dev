@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:coonch/common/widgets/like_share_row.dart';
 import 'package:coonch/common/widgets/profile_data_row_free.dart';
-import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
-import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
@@ -50,7 +47,7 @@ class _AudioContentHomeState extends State<AudioContentHome> {
   }
 
   Future<void> _initAudio() async {
-    print("_initAudio=======>${widget.audioModel.audioUrl}");
+    debugPrint("_initAudio=======>${widget.audioModel.audioUrl}");
     AudioSource audioSource =
         AudioSource.uri(Uri.parse(widget.audioModel.audioUrl));
 
@@ -102,7 +99,7 @@ class _AudioContentHomeState extends State<AudioContentHome> {
 
         /// Audio
         PolygonWaveform(
-          samples: [],
+          samples: const [],
           height: 50,
           width: 50,
         ),

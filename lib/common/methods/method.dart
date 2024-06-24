@@ -53,8 +53,8 @@ void showToast({
 //   return croppedFile == null ? null : XFile(croppedFile.path);
 // }
 Future<XFile?> pickImage() async {
-  final _picker = ImagePicker();
-  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
   return pickedFile;
 }
 

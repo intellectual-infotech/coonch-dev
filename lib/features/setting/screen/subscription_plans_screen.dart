@@ -112,7 +112,7 @@ class SubscriptionPlansScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: MSizes.spaceBtwSections / 2),
                 CommonElevatedButton(onPressed: () {
-                  print("callong subscribeCreatorAPI");
+                  debugPrint("callong subscribeCreatorAPI");
                   settingController.subscribeCreatorAPI(creatorUserId, false);
                 }, title: "Subscribe")
               ],
@@ -161,7 +161,7 @@ class SubscriptionPlansScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: MSizes.spaceBtwSections / 2),
                 CommonElevatedButton(onPressed: () {
-                  print("callong subscribeCreatorAPI");
+                  debugPrint("callong subscribeCreatorAPI");
                   settingController.subscribeCreatorAPI(creatorUserId, true);
                 }, title: "Subscribe")
               ],

@@ -10,11 +10,10 @@ import 'package:coonch/utils/constants/sizes.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({super.key});
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();

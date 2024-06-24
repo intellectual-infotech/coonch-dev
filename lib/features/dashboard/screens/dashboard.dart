@@ -46,7 +46,7 @@ class DashBoardScreen extends StatelessWidget {
             onPressed: () {},
             icon: SvgPicture.asset(
               MIcons.iconNotification,
-              color: MColors.black,
+              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ),
           ),
         ],

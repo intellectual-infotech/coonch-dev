@@ -21,7 +21,7 @@ class AlmostThereScreen extends StatelessWidget {
   AlmostThereScreen({super.key});
 
   // final AuthController authController = Get.put(AuthController());
-  XFile? pickedFile;
+  late final XFile? pickedFile;
 
   final AuthController authController = Get.find<AuthController>();
 
@@ -60,7 +60,7 @@ class AlmostThereScreen extends StatelessWidget {
                       onTap: () async {
                         pickedFile = await pickImage();
                         if (pickedFile != null) {
-                          print("pickedFile here --> $pickedFile");
+                          debugPrint("pickedFile here --> $pickedFile");
                           authController.setSelectedProfilePhoto(pickedFile!);
                         }
                       },

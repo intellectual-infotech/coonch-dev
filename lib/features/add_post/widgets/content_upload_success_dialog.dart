@@ -1,7 +1,6 @@
 import 'package:coonch/common/widgets/common_elevated_button.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
-import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

@@ -1,4 +1,3 @@
-import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/models/text_model.dart';
 import 'package:coonch/features/home/models/video_model.dart';
@@ -7,7 +6,6 @@ import 'package:coonch/utils/constants/sizes.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class DescriptionWithChangeableHeightHome extends StatelessWidget {
   DescriptionWithChangeableHeightHome({

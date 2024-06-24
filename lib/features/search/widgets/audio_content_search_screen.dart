@@ -5,7 +5,6 @@ import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/home/widgets/description_with_changeable_height_home.dart';
 import 'package:coonch/features/search/model/search_user_profile_result.dart';
-import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
@@ -50,7 +49,7 @@ class _AudioContentSearchState extends State<AudioContentSearch> {
   }
 
   Future<void> _initAudio() async {
-    print("_initAudio=======>${widget.audioModel.audioPath}");
+    debugPrint("_initAudio=======>${widget.audioModel.audioPath}");
     AudioSource audioSource =
         AudioSource.uri(Uri.parse(widget.audioModel.audioPath ?? ""));
 
@@ -109,7 +108,7 @@ class _AudioContentSearchState extends State<AudioContentSearch> {
 
         /// Audio
         PolygonWaveform(
-          samples: [],
+          samples: const [],
           height: 50,
           width: 50,
         ),
@@ -142,17 +141,14 @@ class _AudioContentSearchState extends State<AudioContentSearch> {
                     _audioPlayer.seek(position);
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
-
         const SizedBox(height: MSizes.sm),
 
         /// Description
-        DescriptionWithChangeableHeightHome(
-          model: widget.audioModel,
-        ),
+        DescriptionWithChangeableHeightHome(model: widget.audioModel),
         const SizedBox(height: MSizes.sm),
       ],
     );

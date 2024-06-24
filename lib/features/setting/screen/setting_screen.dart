@@ -2,7 +2,6 @@ import 'package:coonch/features/auth/screens/login_screen.dart';
 import 'package:coonch/features/setting/controllers/setting_controller.dart';
 import 'package:coonch/features/setting/screen/subscription_screen.dart';
 import 'package:coonch/features/setting/widgets/setting_list_tile.dart';
-import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/image_strings.dart';
 import 'package:coonch/utils/constants/sizes.dart';
 import 'package:coonch/utils/constants/text_strings.dart';

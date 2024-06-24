@@ -16,12 +16,9 @@ class AppLogoImage extends StatelessWidget {
     return Column(
       children: [
         // Image(image: AssetImage(imgString)),
-        Container(
-          child: SvgPicture.asset(
-            imgString,
-            // color: Colors.blue,
-          ),
-          // color: Colors.red,
+        SvgPicture.asset(
+          imgString,
+          // color: Colors.blue,
         ),
         const SizedBox(height: MSizes.spaceBtwItems),
       ],

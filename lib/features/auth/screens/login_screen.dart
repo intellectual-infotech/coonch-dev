@@ -1,20 +1,19 @@
+import 'package:coonch/common/widgets/common_elevated_button.dart';
 import 'package:coonch/common/widgets/common_text_field.dart';
+import 'package:coonch/common/widgets/or_widget.dart';
 import 'package:coonch/features/auth/controllers/auth_controller.dart';
+import 'package:coonch/features/auth/screens/reset_password.dart';
 import 'package:coonch/features/auth/screens/signup_screen.dart';
-import 'package:coonch/features/auth/widgets/app_logo_image.dart';
 import 'package:coonch/features/auth/widgets/auth_heading.dart';
+import 'package:coonch/features/auth/widgets/social_button.dart';
+import 'package:coonch/features/auth/widgets/term_and_policy.dart';
+import 'package:coonch/utils/constants/colors.dart';
+import 'package:coonch/utils/constants/image_strings.dart';
+import 'package:coonch/utils/constants/sizes.dart';
+import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../common/widgets/common_elevated_button.dart';
-import '../../../common/widgets/or_widget.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/image_strings.dart';
-import '../../../utils/constants/sizes.dart';
-import '../../../utils/constants/text_strings.dart';
-import '../widgets/social_button.dart';
-import '../widgets/term_and_policy.dart';
-import 'reset_password.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});

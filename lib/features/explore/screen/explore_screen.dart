@@ -44,7 +44,7 @@ class ExploreScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: exploreController.categoriesIcons.length,
                     itemBuilder: (context, index) {
                       return ExploreCategoriesOption(

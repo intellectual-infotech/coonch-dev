@@ -18,7 +18,7 @@ class MoneyTypeRadioButton extends StatelessWidget {
       return InkWell(
         onTap: () {
           radioController.setOrderType(value);
-          print(value);
+          debugPrint(value);
         },
         child: Row(
           children: [
@@ -28,7 +28,7 @@ class MoneyTypeRadioButton extends StatelessWidget {
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onChanged: (String? value){
                 radioController.setOrderType(value!);
-                print(value);
+                debugPrint(value);
               },
               activeColor: Theme.of(context).primaryColor,
             ),
