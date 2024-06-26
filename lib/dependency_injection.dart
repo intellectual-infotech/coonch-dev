@@ -1,4 +1,6 @@
 //Create a file: dependency_injection.dart
+import 'package:coonch/common/controller/fetch_following_controller.dart';
+import 'package:coonch/common/controller/follow_unfollow_controller.dart';
 import 'package:coonch/features/add_post/controllers/add_post_controller.dart';
 import 'package:coonch/features/auth/controllers/auth_controller.dart';
 import 'package:coonch/features/explore/controllers/explore_controller.dart';
@@ -32,4 +34,6 @@ Future<void> init() async {
   );
   Get.lazyPut<ExploreController>(() => ExploreController(), fenix: true);
   Get.lazyPut<PurchaseController>(() => PurchaseController(), fenix: true);
+  Get.lazyPut<FetchFollowingController>(() => FetchFollowingController(), fenix: true);
+  Get.lazyPut<FollowUnfollowController>(() => FollowUnfollowController(), fenix: true);
 }

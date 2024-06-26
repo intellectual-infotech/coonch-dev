@@ -28,10 +28,6 @@ class ProfileScreen extends StatelessWidget {
 
   void changeContentType(String contentType) {
     selectedContentType.value = contentType;
-    // Get.find<SearchScreenController>().searchUserProfileAPI(
-    //   searchUserId: profileController.userDataModel?.value.userid ?? "",
-    //   moneyType: contentType,
-    // );
     profileController.searchOwnProfileAPI(
       searchUserId: profileController.userDataModel?.value.userid ?? "",
       moneyType: contentType,
@@ -44,11 +40,6 @@ class ProfileScreen extends StatelessWidget {
         profileController.userDataModel?.value.userid ?? "";
 
     profileController.searchOwnProfileAPI(searchUserId: ownProfileId);
-
-    // final SearchScreenController searchScreenController =
-    //     Get.find<SearchScreenController>()
-    //       ..searchUserProfileAPI(searchUserId: ownProfileId);
-
 
     return Scaffold(
       backgroundColor: MColors.softGrey,

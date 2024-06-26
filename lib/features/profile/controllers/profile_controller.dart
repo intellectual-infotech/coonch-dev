@@ -30,6 +30,7 @@ class ProfileController extends GetxController {
   Rx<UserModel>? userDataModel = UserModel().obs;
   Rx<UserModel>? otherUser = UserModel().obs;
   RxBool isLoading = false.obs;
+  RxBool basicDataLoading = false.obs;
 
   late final MLocalStorage localStorage;
   final SearchScreenController searchController = Get.find<SearchScreenController>();
@@ -143,7 +144,7 @@ class ProfileController extends GetxController {
       debugPrint(
           "userProfileResult.value audios  :: --> ${userProfileResult.value!
               .audios}");
-      debugPrint(" searchUserProfileAPI response :: --> $response");
+      debugPrint(" searchOwnProfileAPI response :: --> $response");
       isLoading.value = false;
       update(["searchedProfilePage"]);
       if (callback != null) {
@@ -152,8 +153,8 @@ class ProfileController extends GetxController {
       // callback3!();
 
     } else {
-      debugPrint("searchUserProfileAPI response is null or empty");
-      showToast(title: "searchUserProfileAPI response is null or empty");
+      debugPrint("searchOwnProfileAPI response is null or empty");
+      showToast(title: "searchOwnProfileAPI response is null or empty");
       // callback3!();
     }
   }
@@ -197,7 +198,7 @@ class ProfileController extends GetxController {
   /// Get Searched User Profile Info
   Future<void> callGetProfile(
       {String? otherUserId, Function()? callback}) async {
-
+    basicDataLoading.value = true; // Start loading
     isLoading.value = true;
     var response = await restAPI.postDataMethod(
         "${APIConstants.strDefaultAuthPath}/getuserInfo",
@@ -228,9 +229,9 @@ class ProfileController extends GetxController {
       if (response == null || response?.isEmpty) {
         debugPrint("callGetProfile response is null");
         showToast(title: "callGetProfile response is null");
-        return;
       }
     }
+    basicDataLoading.value = false; // End loading
     isLoading.value = false;
   }
 

@@ -1,4 +1,5 @@
 import 'package:coonch/api.dart';
+import 'package:coonch/common/controller/follow_unfollow_controller.dart';
 import 'package:coonch/common/widgets/image_builder.dart';
 import 'package:coonch/features/search/controllers/search_screen_controller.dart';
 import 'package:coonch/features/search/model/search_result.dart';
@@ -15,6 +16,9 @@ class SearchScreen extends StatelessWidget {
 
   final SearchScreenController searchScreenController =
       Get.find<SearchScreenController>();
+
+  final FollowUnfollowController followUnfollowController =
+      Get.find<FollowUnfollowController>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,71 +75,28 @@ class SearchScreen extends StatelessWidget {
                       onTap: () {
                         Get.to(SearchUserProfileScreen(
                           searchedUserId: user.userid,
-                          following: user.following,
+                          isFollowing: RxBool(user.following),
                           subscription: user.subscription,
                         ));
                       },
                       leading: ImageBuilder(
-                          url:
-                              "${APIConstants.strProfilePicBaseUrl}${user.profilePic}"),
+                        url:
+                            "${APIConstants.strProfilePicBaseUrl}${user.profilePic}",
+                      ),
                       title: Text(user.username),
-                      onLongPress: () {
-                        Get.to(SubscriptionScreen(
-                          creatorUserId: user.userid,
-                        ));
-                      },
                       trailing: ElevatedButton(
                         onPressed: () {
-                          searchScreenController.followUserAPI(
-                            followingId: user.userid,
-                            followId: searchScreenController.loggedInUser?.value.userid ?? "",
-                          );
+                          Get.to(SubscriptionScreen(
+                            creatorUserId: user.userid,
+                          ));
                         },
-                        child: user.following
-                            ? const Text("Unfollow")
-                            : const Text("Follow"),
+                        child: const Text("Subscribe"),
                       ),
                     );
                   },
                 );
               }),
             ),
-
-            /// Recent Searchs
-            // const Text(
-            //   "Recent search",
-            //   style: TextStyle(
-            //     fontSize: MSizes.fontSizeMd,
-            //     fontWeight: FontWeight.w400,
-            //     color: MColors.darkGrey,
-            //   ),
-            // ),
-
-            /// List Of Recent Searches
-            // Column(
-            //   children: [
-            //     ListTile(
-            //       title: const Text("Adriam Liyam"),
-            //       trailing: SvgPicture.asset(MIcons.iconCross),
-            //     ),
-            //     ListTile(
-            //       title: const Text("Jaydon Lipshutz"),
-            //       trailing: SvgPicture.asset(MIcons.iconCross),
-            //     ),
-            //     ListTile(
-            //       title: const Text("Cristofer Lipshutz"),
-            //       trailing: SvgPicture.asset(MIcons.iconCross),
-            //     ),
-            //     ListTile(
-            //       title: const Text("Nolan Dokidis"),
-            //       trailing: SvgPicture.asset(MIcons.iconCross),
-            //     ),
-            //     ListTile(
-            //       title: const Text("Chance Aminoff"),
-            //       trailing: SvgPicture.asset(MIcons.iconCross),
-            //     ),
-            //   ],
-            // )
           ],
         ),
       ),

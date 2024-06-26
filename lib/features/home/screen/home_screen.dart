@@ -1,4 +1,5 @@
 import 'package:coonch/api.dart';
+import 'package:coonch/common/controller/follow_unfollow_controller.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
 import 'package:coonch/features/home/models/audio_model.dart';
 import 'package:coonch/features/home/models/post_data_model.dart';
@@ -19,6 +20,9 @@ class HomeScreen extends StatelessWidget {
   final HomeController homeController = Get.find<HomeController>()
     ..getAllPostData();
   final ScrollController _scrollController = ScrollController();
+
+  final FollowUnfollowController followUnfollowController =
+      Get.find<FollowUnfollowController>();
 
   HomeScreen({super.key}) {
     _scrollController.addListener(() {
@@ -124,17 +128,17 @@ class HomeScreen extends StatelessWidget {
                               String searchedUserId =
                                   postDataModel.creatorId ?? "";
 
-                              bool isFollowing =
-                                  await homeController.checkIfFollow(
-                                      searchedUserId: searchedUserId);
+                              await followUnfollowController.checkFollowingStatus(
+                                  searchedUserId: searchedUserId);
 
-                              debugPrint("Is following: $isFollowing");
-
-                              Future.delayed(const Duration(seconds: 1), (){
+                              Future.delayed(const Duration(seconds: 1), () {
                                 Get.to(SearchUserProfileScreen(
                                   searchedUserId: searchedUserId,
-                                  following: isFollowing,
-                                  subscription: "subscription", /// Change
+                                  isFollowing:
+                                      RxBool(followUnfollowController.checkIfFollowing),
+                                  subscription: followUnfollowController
+                                      .checkSubscription,
+                                  /// Change
                                 ));
                               });
                             },

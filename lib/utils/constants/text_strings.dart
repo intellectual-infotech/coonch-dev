@@ -60,6 +60,7 @@ class MTexts {
   static const String strSubscribe = "Subscribe";
   static const String strUnSubscribe = "Unsubscribe";
   static const String strFollowing = "Following";
+  static const String strFollowers = "Followers";
   static const String strFirstName = "First Name";
   static const String strLastName = "Last Name";
   static const String strBio = "Bio";

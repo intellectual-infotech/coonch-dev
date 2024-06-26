@@ -191,23 +191,45 @@ class SearchScreenController extends GetxController {
     }
   }
 
-  Future<void> followUserAPI(
-      {required String followingId, required String followId}) async {
-    try {
-      var response = await restAPI.postDataMethod("api/follow/follow", data: {
-        "followingid": followingId,
-        "followid": followId,
-      }, headers: {
-        'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
-      });
+  //
+  // /// Get Searched User Profile Info
+  // Future<void> callGetSearchProfile(
+  //     {String? otherUserId, Function()? callback}) async {
+  //
+  //   isLoading.value = true;
+  //   var response = await restAPI.postDataMethod(
+  //       "${APIConstants.strDefaultAuthPath}/getuserInfo",
+  //       data: {
+  //         "userid": otherUserId ?? loggedInUser?.value.userid ?? '',
+  //       },
+  //       headers: {
+  //         'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
+  //       });
+  //
+  //   debugPrint("callGetProfile=====>response::$response");
+  //   debugPrint("otherUserId::$otherUserId");
+  //   debugPrint("userId::${loggedInUser?.value.userid}");
+  //   // print("userToken::${userDataModel?.value.token}");
+  //
+  //   if (response != null) {
+  //     if (otherUserId == null) {
+  //       loggedInUser!.value = UserModel.fromJson(response);
+  //       loggedInUser!.refresh();
+  //     } else {
+  //       debugPrint("otheruserId Data is Set");
+  //       otherUser?.value = UserModel.fromJson(response);
+  //     }
+  //     if (callback != null) {
+  //       callback();
+  //     }
+  //   } else {
+  //     if (response == null || response?.isEmpty) {
+  //       debugPrint("callGetProfile response is null");
+  //       showToast(title: "callGetProfile response is null");
+  //       return;
+  //     }
+  //   }
+  //   isLoading.value = false;
+  // }
 
-      if (response['message'] == "Successfully followed new person") {
-        showToast(title: "Successfully followed new person");
-      } else {
-        showToast(title: "Something Went Wrong", subTitle: response['message']);
-      }
-    }catch (e){
-      print(e.toString());
-    }
-  }
 }

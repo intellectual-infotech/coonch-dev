@@ -1,4 +1,5 @@
 import 'package:coonch/api.dart';
+import 'package:coonch/common/controller/follow_unfollow_controller.dart';
 import 'package:coonch/common/widgets/profile_data_row_free.dart';
 import 'package:coonch/common/widgets/profile_data_row_paid.dart';
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
@@ -22,12 +23,12 @@ class SearchUserProfileScreen extends StatelessWidget {
   SearchUserProfileScreen({
     super.key,
     required this.searchedUserId,
-    required this.following,
+    required this.isFollowing,
     required this.subscription,
   });
 
   final String searchedUserId;
-  final bool following;
+  final RxBool isFollowing;
   final String subscription;
   final RxInt currIndex = 0.obs;
   final RxString selectedContentType = 'free'.obs;
@@ -51,10 +52,15 @@ class SearchUserProfileScreen extends StatelessWidget {
     );
   }
 
+  final FollowUnfollowController followUnfollowController =
+      Get.find<FollowUnfollowController>();
+
+  final ProfileController profileController = Get.find<ProfileController>();
+
   @override
   Widget build(BuildContext context) {
-    final ProfileController profileController = Get.find<ProfileController>()
-      ..callGetProfile(otherUserId: searchedUserId);
+
+      profileController.callGetProfile(otherUserId: searchedUserId);
 
     final SearchScreenController searchScreenController =
         Get.find<SearchScreenController>()
@@ -78,7 +84,14 @@ class SearchUserProfileScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(() {
+          if (profileController.basicDataLoading.value) {
+            print(
+                "profileController.basicDataLoading.value ${profileController.basicDataLoading.value}");
+            return const Center(child: CircularProgressIndicator());
+          }
           if (isLoading.value) {
+            print(
+                "isLoading.value ${isLoading.value}");
             return const Center(child: CircularProgressIndicator());
           }
           if (searchScreenController.searchedUser?.value == null) {
@@ -109,11 +122,33 @@ class SearchUserProfileScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: ProfileElevatedButton(
-                          onPressed: () {},
-                          title:
-                              following ? MTexts.strUnFollow : MTexts.strFollow,
-                        ),
+                        child: Obx(() => ProfileElevatedButton(
+                              onPressed: () async {
+                                if (isFollowing.value) {
+                                  await followUnfollowController.followUserAPI(
+                                    followingId: searchedUserId,
+                                    followId: searchScreenController
+                                            .loggedInUser?.value.userid ??
+                                        "",
+                                  );
+                                } else {
+                                  await followUnfollowController
+                                      .unFollowUserAPI(
+                                    followingId: searchedUserId,
+                                    followId: searchScreenController
+                                            .loggedInUser?.value.userid ??
+                                        "",
+                                  );
+                                }
+                                isFollowing.toggle();
+
+                                // isFollowing ? callFollowAPI : callUnFollowAPI;
+                                print("following ===> $isFollowing");
+                              },
+                              title: isFollowing.value
+                                  ? MTexts.strUnFollow
+                                  : MTexts.strFollow,
+                            )),
                       ),
                       const SizedBox(width: MSizes.sm),
                       Expanded(
@@ -249,7 +284,8 @@ class SearchUserProfileScreen extends StatelessWidget {
                           String username = video.username;
                           String userCategory = video.category;
                           String contentId = video.contentId;
-                          String userProfilePic = "${APIConstants.strProfilePicBaseUrl}${video.profilePic}";
+                          String userProfilePic =
+                              "${APIConstants.strProfilePicBaseUrl}${video.profilePic}";
 
                           return selectedContentType.value == 'free'
                               ? SearchProfileVideoFree(

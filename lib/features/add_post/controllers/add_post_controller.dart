@@ -6,9 +6,12 @@ import 'package:coonch/common/widgets/loader_dialogue.dart';
 import 'package:coonch/features/add_post/widgets/content_upload_success_dialog.dart';
 import 'package:coonch/features/auth/models/user_data_model.dart';
 import 'package:coonch/features/home/controllers/home_controller.dart';
+import 'package:coonch/features/profile/controllers/profile_controller.dart';
 import 'package:coonch/features/search/controllers/search_screen_controller.dart';
+import 'package:coonch/features/setting/controllers/setting_controller.dart';
 import 'package:coonch/utils/api/rest_api.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
+import "package:coonch/utils/local_storage/storage_utility.dart";
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +22,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import "package:coonch/utils/local_storage/storage_utility.dart";
-
-import 'package:coonch/features/setting/controllers/setting_controller.dart';
-
 class AddPostController extends GetxController {
   TextEditingController messageController = TextEditingController();
   final RestAPI restAPI = Get.find<RestAPI>();
@@ -30,6 +29,7 @@ class AddPostController extends GetxController {
   UserModel? userDataModel;
 
   final HomeController homeController = Get.find<HomeController>();
+
   // final SearchScreenController searchScreenController =
 
   var selectedCategory = 'Entertainment'.obs;
@@ -40,7 +40,6 @@ class AddPostController extends GetxController {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
     userDataModel = Get.find<SettingController>().userDataModel?.value;
-
   }
 
   void setCategory(String category) {
@@ -82,8 +81,12 @@ class AddPostController extends GetxController {
         homeController.getAllPostData();
         clearController();
 
-        Get.find<SearchScreenController>()
-            .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+        // Get.find<SearchScreenController>()
+        //     .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+
+        Get.find<ProfileController>()
+            .searchOwnProfileAPI(searchUserId: userDataModel?.userid ?? "");
+
         Get.back();
         contentUploadSuccessfullyDialog(
           Get.context!,
@@ -118,8 +121,11 @@ class AddPostController extends GetxController {
     if (response.statusCode == 200) {
       homeController.getAllPostData();
       clearController();
-      Get.find<SearchScreenController>()
-          .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+      // Get.find<SearchScreenController>()
+      //     .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+
+      Get.find<ProfileController>()
+          .searchOwnProfileAPI(searchUserId: userDataModel?.userid ?? "");
       Get.back();
       contentUploadSuccessfullyDialog(
         Get.context!,
@@ -167,8 +173,6 @@ class AddPostController extends GetxController {
     File file = File(assetPath!.value);
     return basename(file.path);
   }
-
-
 
   Future<void> addVideoAssetPost() async {
 // Create an HttpClient using the SecurityContext
@@ -229,8 +233,11 @@ class AddPostController extends GetxController {
           title: MTexts.strVideoUploadSuccessTitle,
           subTitle: MTexts.strVideoUploadSuccessSubTitle,
         );
-        Get.find<SearchScreenController>()
-            .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+        // Get.find<SearchScreenController>()
+        //     .searchUserProfileAPI(searchUserId: userDataModel?.userid ?? "");
+
+        Get.find<ProfileController>()
+            .searchOwnProfileAPI(searchUserId: userDataModel?.userid ?? "");
       } else {
         dismissLoader();
         showToast(title: responseDecoded['error']);

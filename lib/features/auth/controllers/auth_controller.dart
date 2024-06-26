@@ -32,7 +32,7 @@ class AuthController extends GetxController {
   );
   TextEditingController resetEmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController(
-    text: "123456"
+    text: "test2123"
   );
   TextEditingController resetPasswordController = TextEditingController();
   TextEditingController resetOTPController = TextEditingController();

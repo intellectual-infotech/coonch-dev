@@ -1,9 +1,11 @@
-
 import 'package:coonch/features/profile/controllers/profile_controller.dart';
+import 'package:coonch/features/profile/screen/display_followers_screen.dart';
+import 'package:coonch/features/profile/screen/display_following_screen.dart';
 import 'package:coonch/features/profile/widgets/user_statistics_column.dart';
 import 'package:coonch/utils/constants/colors.dart';
 import 'package:coonch/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CurrentUserProfileStatistics extends StatelessWidget {
   const CurrentUserProfileStatistics({
@@ -21,10 +23,10 @@ class CurrentUserProfileStatistics extends StatelessWidget {
         children: [
           /// Posts
           UserStatisticsColumn(
-            count: profileController
-                .userDataModel?.value.totalPosts
-                ?.toString() ??
-                "",
+            count:
+                profileController.userDataModel?.value.totalPosts?.toString() ??
+                    "",
+            crossAxisAlignment: CrossAxisAlignment.center,
             title: MTexts.strPosts,
           ),
           const VerticalDivider(
@@ -34,12 +36,18 @@ class CurrentUserProfileStatistics extends StatelessWidget {
             endIndent: 8,
           ),
           UserStatisticsColumn(
-            count: profileController
-                .userDataModel?.value.followersCount
-                ?.toString() ??
+            count: profileController.userDataModel?.value.followersCount
+                    ?.toString() ??
                 '',
-            title: MTexts.strFriends,
+            title: MTexts.strFollowers,
             crossAxisAlignment: CrossAxisAlignment.center,
+            onTap: () {
+              print(
+                  "profileController.userDataModel?.value.userid === ${profileController.userDataModel?.value.userid}");
+              Get.to(DisplayFollowersScreen(
+                id: profileController.userDataModel?.value.userid ?? "",
+              ));
+            },
           ),
           const VerticalDivider(
             color: MColors.grey,
@@ -48,11 +56,18 @@ class CurrentUserProfileStatistics extends StatelessWidget {
             endIndent: 8,
           ),
           UserStatisticsColumn(
-            count: profileController
-                .userDataModel?.value.followingCount
-                ?.toString() ??
+            count: profileController.userDataModel?.value.followingCount
+                    ?.toString() ??
                 '',
+            crossAxisAlignment: CrossAxisAlignment.center,
             title: MTexts.strFollowing,
+            onTap:  () {
+              print(
+                  "profileController.userDataModel?.value.userid === ${profileController.userDataModel?.value.userid}");
+              Get.to(DisplayFollowingScreen(
+                id: profileController.userDataModel?.value.userid ?? "",
+              ));
+            },
           ),
         ],
       ),

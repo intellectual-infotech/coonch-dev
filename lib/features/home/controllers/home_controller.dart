@@ -28,37 +28,15 @@ class HomeController extends GetxController {
   bool isLoading = false;
   bool hasMore = true;
 
+  // bool isFollowing = false;
+  // var subscription = "";
+
   @override
   void onInit() {
     super.onInit();
     localStorage = Get.find<MLocalStorage>();
     currUser = UserModel.fromJson(localStorage.getUserData()).obs;
     getAllPostData(); // Initial load
-  }
-
-  Future<bool> checkIfFollow(
-      {required String searchedUserId}) async {
-
-
-    try {
-      var response =
-          await restAPI.postDataMethod("api/follow/checkIfFollow", data: {
-        "myId": currUser?.value.id ?? "",
-        "otherId": searchedUserId,
-      }, headers: {
-        'Authorization': "Bearer ${localStorage.getToken() ?? ''}"
-      });
-
-      debugPrint("checkIfFollow====>response::$response");
-      if (response == null || response?.isEmpty) {
-        showToast(title: "addTextPost response null or empty");
-        return false;
-      }
-      return response['follows'] ?? false;
-    } catch (e) {
-      debugPrint(e.toString());
-      return false;
-    }
   }
 
   void getAllPostData(

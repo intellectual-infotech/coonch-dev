@@ -54,17 +54,46 @@ class RestAPI {
       }
 
       debugPrint('postDataMethod=====>response::${response.body}');
-      debugPrint('postDataMethod statusCode =====>response::${response.statusCode}');
+      debugPrint('postDataMethod statusCode =====>statusCode::${response.statusCode}');
 
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        debugPrint("response.body.toString()");
         debugPrint(response.body.toString());
         showToast(title: response.body.toString());
         return response.body;
       }
     } catch (e) {
+      debugPrint("print e");
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<dynamic> deleteDataMethod(
+      String url, {
+        Map<String, dynamic>? data,
+        required Map<String, String> headers,
+  }) async {
+    try{
+      String fullUrl = APIConstants.strBaseUrlWithPort + url;
+      debugPrint('deleteDataMethod=====>URL::$fullUrl');
+      debugPrint('deleteDataMethod=====>data::$data');
+      Response response;
+
+      response = await connect.delete(fullUrl, query: data, headers: headers);
+
+      debugPrint('deleteDataMethod=====>response::${response.body}');
+      debugPrint('deleteDataMethod statusCode =====>statusCode::${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        debugPrint(response.body.toString());
+        showToast(title: response.body.toString());
+        return response.body;
+      }
+
+    }catch(e){
       debugPrint("print e");
       debugPrint(e.toString());
     }

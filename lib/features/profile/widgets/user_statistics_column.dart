@@ -7,32 +7,37 @@ class UserStatisticsColumn extends StatelessWidget {
     required this.count,
     required this.title,
     this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.onTap,
   });
 
   final String count;
   final String title;
   final CrossAxisAlignment crossAxisAlignment;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Text(
-          count,
-          style: const TextStyle(
-            fontSize: MSizes.fontSizeLg,
-            fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: crossAxisAlignment,
+        children: [
+          Text(
+            count,
+            style: const TextStyle(
+              fontSize: MSizes.fontSizeLg,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: MSizes.spaceBtwTexts),
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w300,
+          const SizedBox(height: MSizes.spaceBtwTexts),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w300,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
